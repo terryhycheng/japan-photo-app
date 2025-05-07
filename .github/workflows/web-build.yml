@@ -6,12 +6,13 @@ on:
       - main
     paths:
       - apps/web/**
+      - .github/workflows/web-build.yml
   pull_request:
     branches:
       - main
     paths:
       - apps/web/**
-
+      - .github/workflows/web-build.yml
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}-web
@@ -43,7 +44,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: ./apps/web
+          context: .
+          file: ./apps/web/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

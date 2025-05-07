@@ -6,12 +6,13 @@ on:
       - main
     paths:
       - apps/api/**
+      - .github/workflows/api-build.yml
   pull_request:
     branches:
       - main
     paths:
       - apps/api/**
-
+      - .github/workflows/api-build.yml
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}-api
@@ -43,7 +44,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: ./apps/api
+          context: .
+          file: ./apps/api/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
