@@ -58,15 +58,16 @@ jobs:
 
       - name: Trigger Railway Rebuild
         run: |
-          curl --request POST \
+          response=$(curl --request POST \
             --url https://backboard.railway.com/graphql/v2 \
-            --header 'Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}' \
-            --header 'Content-Type: application/json' \
-            --data '{
-              "query": "mutation redeploy {
-                serviceInstanceRedeploy(
-                  serviceId: \"${{ vars.RAILWAY_WEB_SERVICE_ID }}\",
-                  environmentId: \"${{ vars.RAILWAY_ENVIRONMENT_ID }}\"
-                )
-              }"
-            }'
+            --header "Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}" \
+            --header "Content-Type: application/json" \
+            --data '{"query": "mutation redeploy { serviceInstanceRedeploy(serviceId: \"${{ vars.RAILWAY_WEB_SERVICE_ID }}\", environmentId: \"${{ vars.RAILWAY_ENVIRONMENT_ID }}\") }"}' \
+            --fail --silent --show-error)
+
+          if [ $? -ne 0 ]; then
+            echo "Failed to trigger Railway rebuild"
+            exit 1
+          fi
+
+          echo "Railway rebuild triggered successfully"
