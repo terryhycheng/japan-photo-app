@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  web:
+    image: japan-photo-app-web:latest
+    ports:
+      - 3000:3000
+    depends_on:
+      - api
+    networks:
+      - japan-photo-app-network
+
+  api:
+    image: japan-photo-app-api:latest
+    ports:
+      - 3333:3000
+    networks:
+      - japan-photo-app-network
+
+networks:
+  japan-photo-app-network:
+    name: japan-photo-app-network
+    driver: bridge
