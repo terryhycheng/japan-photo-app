@@ -54,3 +54,18 @@ jobs:
           build-args: |
             TURBO_TEAM=${{ secrets.TURBO_TEAM }} 
             TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
+
+      - name: Trigger Railway Rebuild
+        run: |
+          curl --request POST \
+            --url https://backboard.railway.com/graphql/v2 \
+            --header 'Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}' \
+            --header 'Content-Type: application/json' \
+            --data '{
+              "query": "mutation redeploy {
+                serviceInstanceRedeploy(
+                  serviceId: \"${{ vars.RAILWAY_API_SERVICE_ID }}\",
+                  environmentId: \"${{ vars.RAILWAY_ENVIRONMENT_ID }}\"
+                )
+              }"
+            }'

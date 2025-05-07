@@ -19,10 +19,15 @@ tasks:
     cmds:
     - task 01-build-web-image
     - task 02-build-api-image
-  05-run-docker-compose:
+  04-run-docker-compose:
     desc: Run the docker compose
     cmds:
     - docker-compose up -d
+  05-build-and-run-docker-compose:
+    desc: Build and run the docker compose
+    cmds:
+    - task 03-build-all-images
+    - task 04-run-docker-compose
   06-stop-docker-compose:
     desc: Stop the docker compose
     cmds:
