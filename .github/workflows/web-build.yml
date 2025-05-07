@@ -14,7 +14,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}-web:latest
+  IMAGE_NAME: ${{ github.repository }}-web
 
 jobs:
   build-and-push:
