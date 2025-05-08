@@ -1,4 +1,4 @@
-name: Build and Push Docker Image For Web
+name: Prod Web
 
 on:
   push:
@@ -57,6 +57,7 @@ jobs:
             TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
 
       - name: Trigger Railway Rebuild
+        if: ${{ github.event_name != 'pull_request' }}
         run: |
           response=$(curl --request POST \
             --url https://backboard.railway.com/graphql/v2 \
