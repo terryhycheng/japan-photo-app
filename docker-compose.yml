@@ -14,6 +14,8 @@ services:
     image: japan-photo-app-api:latest
     ports:
       - 3333:3000
+    env_file:
+      - "./apps/api/.env"
     networks:
       - japan-photo-app-network
 
