@@ -1,4 +1,5 @@
 import CustomButton from "@/features/layout/components/Button";
+import { Button } from "@repo/ui/components/button";
 import { ArrowRightIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
