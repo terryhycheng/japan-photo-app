@@ -10,7 +10,8 @@ interface CustomButtonProps {
     IconRight?: React.ElementType;
   };
   className?: string;
-  href: string;
+  href?: string;
+  onClick?: () => void;
 }
 
 const CustomButton = ({
@@ -20,15 +21,42 @@ const CustomButton = ({
   icons,
   className,
   href,
+  onClick,
 }: CustomButtonProps) => {
   const darkenColour = `color-mix(in srgb, ${colour} 40%, black)`;
   const borderColour = isWhiteText
     ? `color-mix(in srgb, ${colour} 50%, white)`
     : `color-mix(in srgb, ${colour} 60%, black)`;
 
+  if (href) {
+    return (
+      <Link
+        href={href}
+        className={`font-kiwimaru flex cursor-pointer items-center justify-center gap-2 rounded-full border-b-4 px-6 py-2 text-xl tracking-wider transition-all duration-300 hover:scale-105 ${className}`}
+        style={{
+          backgroundColor: colour,
+          color: isWhiteText ? "white" : darkenColour,
+          borderColor: borderColour,
+        }}
+      >
+        {icons?.IconLeft && (
+          <icons.IconLeft
+            style={{ color: isWhiteText ? "white" : darkenColour }}
+          />
+        )}
+        <span className="font-kiwimaru tracking-[0.2rem]">{text}</span>
+        {icons?.IconRight && (
+          <icons.IconRight
+            style={{ color: isWhiteText ? "white" : darkenColour }}
+          />
+        )}
+      </Link>
+    );
+  }
+
   return (
-    <Link
-      href={href}
+    <button
+      onClick={onClick}
       className={`font-kiwimaru flex cursor-pointer items-center justify-center gap-2 rounded-full border-b-4 px-6 py-2 text-xl tracking-wider transition-all duration-300 hover:scale-105 ${className}`}
       style={{
         backgroundColor: colour,
@@ -47,7 +75,7 @@ const CustomButton = ({
           style={{ color: isWhiteText ? "white" : darkenColour }}
         />
       )}
-    </Link>
+    </button>
   );
 };
 

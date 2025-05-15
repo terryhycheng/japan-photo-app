@@ -1,5 +1,5 @@
 import React from "react";
-import Banner from "@/features/layout/components/Banner";
+import Banner from "@/components/Banner";
 const ResultPage = () => {
   return (
     <>

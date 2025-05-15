@@ -2,11 +2,11 @@
 
 import Image from "next/image";
 import React from "react";
-import CustomButton from "./Button";
+import CustomButton from "./CustomButton";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@/utils/utils";
+import { cn } from "@repo/ui/lib/utils";
 
 const IndexHeader = () => {
   const path = usePathname();

@@ -1,4 +1,4 @@
-import MainHeader from "@/features/layout/components/MainHeader";
+import MainHeader from "@/components/MainHeader";
 import React from "react";
 
 const MainContentLayout = ({ children }: { children: React.ReactNode }) => {

@@ -1,5 +1,5 @@
 import React from "react";
-import IndexHeader from "@/features/layout/components/IndexHeader";
+import IndexHeader from "@/components/IndexHeader";
 
 const IndexLayout = ({ children }: { children: React.ReactNode }) => {
   return (

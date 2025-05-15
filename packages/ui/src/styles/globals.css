@@ -8,7 +8,9 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
+  --toastify-font-family: "Kiwi Maru", sans-serif;
+  --main-color: #840f0f;
+  --background: #fbdecc;
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -79,6 +81,7 @@
 }
 
 @theme inline {
+  --color-main: var(--main-color);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -119,9 +122,21 @@
 
 @layer base {
   * {
+    font-family: "Dela Gothic One", sans-serif;
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-[var(--main-color)];
   }
+}
+
+.bg-photo {
+  background-image: url("/images/bg.png");
+  background-size: cover;
+  background-position: right;
+  background-repeat: no-repeat;
+}
+
+.font-kiwimaru {
+  font-family: "Kiwi Maru", sans-serif;
 }
