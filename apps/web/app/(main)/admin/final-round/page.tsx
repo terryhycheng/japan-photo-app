@@ -1,7 +1,12 @@
 import React from "react";
+import FinalRoundClientPage from "./client";
 
 const FinalRoundPage = () => {
-  return <div>FinalRoundPage</div>;
+  return (
+    <>
+      <FinalRoundClientPage />
+    </>
+  );
 };
 
 export default FinalRoundPage;

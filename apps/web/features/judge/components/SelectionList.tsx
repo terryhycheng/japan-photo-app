@@ -47,8 +47,6 @@ const SelectionList = () => {
     return <div>Loading...</div>;
   }
 
-  console.log(isLoading);
-
   return (
     <>
       <section className="flex items-center justify-between">
@@ -98,20 +96,23 @@ const SelectionList = () => {
         </div>
       </section>
       <section className="mt-8 grid gap-2 md:grid-cols-2 lg:grid-cols-4 lg:gap-4">
-        {data.map((item) => (
-          <SelectionCard
-            key={item.id}
-            photoData={item}
-            isSelected={selection.includes(item.id)}
-            onSelect={() => {
-              setSelection((prev) => {
-                return prev.includes(item.id)
-                  ? prev.filter((photo) => photo !== item.id)
-                  : [...prev, item.id];
-              });
-            }}
-          />
-        ))}
+        {data.map((item) => {
+          console.log(item);
+          return (
+            <SelectionCard
+              key={item.id}
+              photoData={item}
+              isSelected={selection.includes(item.id)}
+              onSelect={() => {
+                setSelection((prev) => {
+                  return prev.includes(item.id)
+                    ? prev.filter((photo) => photo !== item.id)
+                    : [...prev, item.id];
+                });
+              }}
+            />
+          );
+        })}
       </section>
     </>
   );
