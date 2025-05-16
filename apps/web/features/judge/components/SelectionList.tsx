@@ -31,7 +31,11 @@ const SelectionList = () => {
       await updatePhotoSelection(selection);
     },
     onSuccess: () => {
-      clearPhotosCache({ key: "photos-selected", queryClient });
+      clearPhotosCache({
+        key: ["photos-selected"],
+        redisKey: "photos-selected",
+        queryClient,
+      });
     },
   });
 
@@ -64,7 +68,7 @@ const SelectionList = () => {
             className="border-main hover:bg-main mr-2 border hover:text-white"
             size="icon"
             onClick={async () => {
-              await clearPhotosCache({ key: "photos", queryClient });
+              await clearPhotosCache({ key: ["photos"], queryClient });
             }}
           >
             <RefreshCcwIcon className="size-5" />

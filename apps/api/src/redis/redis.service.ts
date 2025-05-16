@@ -28,6 +28,16 @@ export class RedisService implements OnModuleDestroy {
   }
 
   async delete(key: string) {
+    if (key.includes('*')) {
+      // Handle pattern deletion
+      const keys = await this.redis.keys(key);
+      if (keys.length > 0) {
+        await this.redis.del(keys);
+      }
+      return;
+    }
+
+    // Handle single key deletion
     await this.redis.del(key);
   }
 

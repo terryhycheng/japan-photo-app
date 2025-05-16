@@ -1,7 +1,7 @@
 import { JudgeFormMainSchema } from "../components/JudgeFormMain";
 import { JudgeFormOtherSchema } from "../components/JudgeFormOther";
 
-interface JudgeFormData {
+export interface JudgeFormData {
   data: JudgeFormMainSchema | JudgeFormOtherSchema;
   photoId: string;
 }
@@ -9,9 +9,23 @@ export const onJudgeFormMainSubmit = async ({
   data,
   photoId,
 }: JudgeFormData) => {
-  const formattedData = formatMainJudgeData(data);
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/judge/main/${photoId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({
+        scores: data.score,
+        comment: data.comment === "" ? null : data.comment,
+      }),
+    },
+  );
 
-  console.log({ ...formattedData, photoId });
+  if (!res.ok) {
+    throw new Error("Failed to update photo");
+  }
 };
 
 export const onJudgeFormOtherSubmit = async ({
@@ -21,18 +35,6 @@ export const onJudgeFormOtherSubmit = async ({
   const formattedData = formatOtherJudgeData(data);
 
   console.log({ formattedData, photoId });
-};
-
-// --- Helpers ---
-const formatMainJudgeData = (data: JudgeFormMainSchema) => {
-  const formattedScores: Record<string, number> = {};
-  Object.entries(data.score).forEach(([key, value]) => {
-    formattedScores[key] = value[0] ?? 0;
-  });
-  return {
-    scores: formattedScores,
-    comment: data.comment === "" ? null : data.comment,
-  };
 };
 
 const formatOtherJudgeData = (data: JudgeFormOtherSchema) => {

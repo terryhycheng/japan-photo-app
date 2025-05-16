@@ -1,11 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
+import { JudgeMainBody } from 'src/judge/dto/judge.dto';
 
 export class AuthorDto {
   @ApiProperty()
   id: string;
   @ApiProperty()
   name: string;
+}
+
+export class GetSinglePhotoParams {
+  @ApiProperty({
+    description: 'The ID of the photo to be retrieved',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @IsString()
+  photoId: string;
 }
 
 export class PhotosDto {
@@ -19,6 +29,8 @@ export class PhotosDto {
   imageUrl: string;
   @ApiProperty()
   author: AuthorDto;
+  @ApiProperty()
+  judge: JudgeMainBody;
 }
 
 export class UpdateSelectionDto {
@@ -31,5 +43,6 @@ export class UpdateSelectionDto {
 export class PhotosClearCacheDto {
   @ApiProperty()
   @IsString()
-  key: 'photos' | 'photos-selected';
+  @IsOptional()
+  key?: string;
 }

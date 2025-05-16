@@ -3,6 +3,7 @@ import {
   CollectionReference,
   doc as docRef,
   DocumentData,
+  doc,
   getDoc,
   getDocs,
   where,
@@ -12,6 +13,7 @@ import { collection, orderBy, query } from 'firebase/firestore';
 import { FirebaseService } from 'src/firebase/firebase.service';
 import { PhotosDto } from './dto/photos.dto';
 import { RedisService } from 'src/redis/redis.service';
+import { NotFoundError } from 'src/common/common.error';
 
 type CollectionType = CollectionReference<DocumentData, DocumentData>;
 
@@ -58,6 +60,23 @@ export class PhotosService {
     } catch (error) {
       throw new Error(`Failed to get photos: ${error}`);
     }
+  }
+
+  async getPhotoById(photoId: string): Promise<PhotosDto> {
+    const cachedPhoto = await this.redisService.get<PhotosDto>(
+      `${this.PHOTOS_KEY}:${photoId}`,
+    );
+    if (cachedPhoto) {
+      return cachedPhoto;
+    }
+    const docRef = doc(this.photosCollectionRef, photoId);
+    const docSnapShot = await getDoc(docRef);
+    const photoData = docSnapShot.data();
+    if (!photoData) {
+      throw new NotFoundError('Invalid photo id');
+    }
+    await this.redisService.set(`photo:${photoId}`, photoData);
+    return photoData as PhotosDto;
   }
 
   async getSelectedPhotos(): Promise<PhotosDto[]> {
@@ -119,7 +138,7 @@ export class PhotosService {
     await this.redisService.delete(`${this.PHOTOS_KEY}-selected`); // delete cache
   }
 
-  async clearCache(key: string): Promise<void> {
+  async clearCache(key?: string): Promise<void> {
     switch (key) {
       case this.PHOTOS_KEY:
         await this.redisService.delete(this.PHOTOS_KEY);
@@ -129,6 +148,7 @@ export class PhotosService {
         break;
       default:
         await this.redisService.delete(this.PHOTOS_KEY);
+        await this.redisService.delete(`${this.PHOTOS_KEY}:*`);
         await this.redisService.delete(`${this.PHOTOS_KEY}-selected`);
         break;
     }

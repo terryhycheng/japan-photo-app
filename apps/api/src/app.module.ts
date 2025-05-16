@@ -7,6 +7,7 @@ import { RedisModule } from './redis/redis.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { JudgeModule } from './judge/judge.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -33,6 +34,7 @@ import { APP_GUARD } from '@nestjs/core';
     FirebaseModule,
     PhotosModule,
     RedisModule,
+    JudgeModule,
   ],
   providers: [
     {

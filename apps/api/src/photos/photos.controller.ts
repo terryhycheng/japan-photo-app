@@ -5,10 +5,14 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  InternalServerErrorException,
+  NotFoundException,
+  Param,
   Post,
 } from '@nestjs/common';
 import { PhotosService } from './photos.service';
 import {
+  GetSinglePhotoParams,
   PhotosClearCacheDto,
   PhotosDto,
   UpdateSelectionDto,
@@ -16,10 +20,12 @@ import {
 import {
   ApiBody,
   ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTooManyRequestsResponse,
 } from '@nestjs/swagger';
+import { NotFoundError } from 'src/common/common.error';
 @Controller('/api/photos')
 @ApiInternalServerErrorResponse({
   description: 'Internal server error from unknown issue',
@@ -81,6 +87,30 @@ export class PhotosController {
         'Internal server error',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
+    }
+  }
+
+  @Get(':photoId')
+  @ApiOperation({
+    summary: 'Get a photo by ID',
+    description: 'Get a photo by ID from the database',
+  })
+  @ApiOkResponse({
+    description: 'The photo from the database',
+    type: PhotosDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'The photo not found',
+  })
+  async getPhotoById(@Param() params: GetSinglePhotoParams) {
+    try {
+      return await this.photosService.getPhotoById(params.photoId);
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        throw new NotFoundException(error.message);
+      }
+
+      throw new InternalServerErrorException(error.message);
     }
   }
 

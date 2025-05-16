@@ -8,7 +8,7 @@ export type PhotoData = {
   selected?: boolean;
   judge?: {
     scores: {
-      [key: string]: number;
+      [key: string]: number[];
     };
     comment: string;
     category?: string;

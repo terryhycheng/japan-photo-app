@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Slider } from "@repo/ui/components/slider";
 import { Textarea } from "@repo/ui/components/textarea";
 import { useForm } from "react-hook-form";
@@ -13,6 +13,9 @@ import { z } from "zod";
 import { SaveIcon } from "lucide-react";
 import CustomButton from "@/components/CustomButton";
 import { onJudgeFormMainSubmit } from "../data/forms";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { clearPhotosCache, getPhotoById } from "../data/photos";
+import { toast } from "react-toastify";
 
 const criterias: {
   id: string;
@@ -71,6 +74,27 @@ const judgeFormMainSchema = z.object({
 export type JudgeFormMainSchema = z.infer<typeof judgeFormMainSchema>;
 
 const JudgeFormMain = ({ photoId }: { photoId: string }) => {
+  const queryClient = useQueryClient();
+
+  const { data: photo, isLoading } = useQuery({
+    queryKey: ["photos", photoId],
+    queryFn: () => getPhotoById(photoId),
+  });
+
+  const { mutate: updatePhoto, isPending } = useMutation({
+    mutationKey: ["updatePhoto"],
+    mutationFn: (data: { data: JudgeFormMainSchema; photoId: string }) =>
+      onJudgeFormMainSubmit(data),
+    onSuccess: () => {
+      clearPhotosCache({ key: [["photos", photoId], "photos"], queryClient });
+      toast.success("評分已更新");
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("評分更新失敗");
+    },
+  });
+
   const defaultScore = criterias.reduce(
     (acc, criteria) => {
       acc[criteria.name] = [0];
@@ -86,15 +110,28 @@ const JudgeFormMain = ({ photoId }: { photoId: string }) => {
     },
   });
 
+  useEffect(() => {
+    if (photo) {
+      form.reset({
+        score: photo.judge?.scores || defaultScore,
+        comment: photo.judge?.comment || "",
+      });
+    }
+  }, [photo]);
+
   const onSubmit = (data: z.infer<typeof judgeFormMainSchema>) => {
-    onJudgeFormMainSubmit({ data, photoId });
+    updatePhoto({ data, photoId });
   };
+
+  if (isLoading || !photo) {
+    return <div className="text-main">Loading...</div>;
+  }
 
   return (
     <Form {...form}>
       <form className="text-main" onSubmit={form.handleSubmit(onSubmit)}>
         <h3 className="text-main text-3xl">拍攝基礎</h3>
-        <div className="mt-4 mb-6 space-y-8">
+        <div className="mt-4 mb-6 space-y-4">
           {criterias
             .filter((criteria) => criteria.type === "basic")
             .map((criteria) => (
@@ -174,7 +211,7 @@ const JudgeFormMain = ({ photoId }: { photoId: string }) => {
           <CustomButton
             isWhiteText
             text="更新評分"
-            disabled={form.formState.isSubmitting || !form.formState.isDirty}
+            disabled={isPending || !form.formState.isDirty}
             colour="var(--main-color)"
             icons={{ IconLeft: SaveIcon }}
           />
