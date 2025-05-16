@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Dela_Gothic_One, Kiwi_Maru } from "next/font/google";
 import "@repo/ui/globals.css";
 import { ToastContainer } from "react-toastify";
+import QueryClientProvider from "@/providers/QueryClientProvider";
 
 const delaGothicOne = Dela_Gothic_One({
   variable: "--font-dela-gothic-one",
@@ -30,7 +31,7 @@ export default function RootLayout({
       <body
         className={`${delaGothicOne.variable} ${kiwimaru.variable} antialiased`}
       >
-        {children}
+        <QueryClientProvider>{children}</QueryClientProvider>
         <ToastContainer position="bottom-right" />
       </body>
     </html>

@@ -7,9 +7,9 @@ export class CloudinaryService {
   constructor() {}
 
   async getPhotosByAssetFolder({
-    assetFolderName,
-    limit,
-  }: GetPhotosByAssetFolderDto) {
+    assetFolderName = 'japan-photos-2025',
+    limit = 150,
+  }: Partial<GetPhotosByAssetFolderDto>) {
     const data = await cloudinary.api.resources_by_asset_folder(
       assetFolderName,
       {

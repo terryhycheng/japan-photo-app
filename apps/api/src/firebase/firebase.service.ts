@@ -5,8 +5,8 @@ import { Auth, getAuth } from 'firebase/auth';
 
 @Injectable()
 export class FirebaseService {
-  private readonly firestore: Firestore;
-  private readonly auth: Auth;
+  firestore: Firestore;
+  auth: Auth;
 
   constructor(@Inject('FIREBASE_APP') private readonly app: FirebaseApp) {
     this.firestore = getFirestore(this.app);

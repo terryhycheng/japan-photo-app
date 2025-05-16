@@ -1,5 +1,6 @@
 import React, { CSSProperties } from "react";
 import Link from "next/link";
+import { cn } from "@repo/ui/lib/utils";
 
 interface CustomButtonProps {
   text: string;
@@ -12,6 +13,7 @@ interface CustomButtonProps {
   className?: string;
   href?: string;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 const CustomButton = ({
@@ -22,6 +24,7 @@ const CustomButton = ({
   className,
   href,
   onClick,
+  disabled = false,
 }: CustomButtonProps) => {
   const darkenColour = `color-mix(in srgb, ${colour} 40%, black)`;
   const borderColour = isWhiteText
@@ -57,12 +60,16 @@ const CustomButton = ({
   return (
     <button
       onClick={onClick}
-      className={`font-kiwimaru flex cursor-pointer items-center justify-center gap-2 rounded-full border-b-4 px-6 py-2 text-xl tracking-wider transition-all duration-300 hover:scale-105 ${className}`}
+      className={cn(
+        "font-kiwimaru flex cursor-pointer items-center justify-center gap-2 rounded-full border-b-4 px-6 py-2 text-xl tracking-wider transition-all duration-300 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-none",
+        className,
+      )}
       style={{
         backgroundColor: colour,
         color: isWhiteText ? "white" : darkenColour,
         borderColor: borderColour,
       }}
+      disabled={disabled}
     >
       {icons?.IconLeft && (
         <icons.IconLeft
