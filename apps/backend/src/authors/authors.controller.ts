@@ -8,7 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { AuthorsService } from './authors.service';
-import { CreateAuthorDto, GetAuthorByIdDto } from './dto/author.dto';
+import { AuthorDto, CreateAuthorDto, GetAuthorByIdDto } from './dto/author.dto';
 import { Author } from 'src/schemas/author.schema';
 import { ApiBody, ApiParam } from '@nestjs/swagger';
 
@@ -31,7 +31,7 @@ export class AuthorsController {
   @ApiParam({ name: 'id', type: String, required: true })
   async getAuthorById(
     @Param() getAuthorByIdDto: GetAuthorByIdDto,
-  ): Promise<Author> {
+  ): Promise<AuthorDto> {
     try {
       return await this.authorsService.getAuthorById(getAuthorByIdDto);
     } catch (error) {

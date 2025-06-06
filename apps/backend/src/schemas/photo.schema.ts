@@ -23,7 +23,11 @@ export class Photo {
   url: string;
 
   @Prop({ type: Object })
-  scores: Record<string, number[]>;
+  judge?: {
+    scores?: Record<string, number[]>;
+    comment?: string;
+    categoryId?: string;
+  };
 }
 
 export const PhotoSchema = SchemaFactory.createForClass(Photo);

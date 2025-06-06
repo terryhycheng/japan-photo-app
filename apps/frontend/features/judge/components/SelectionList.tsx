@@ -4,7 +4,6 @@ import CustomButton from "@/components/CustomButton";
 import React, { useEffect, useState } from "react";
 import SelectionCard from "./SelectionCard";
 import {
-  clearPhotosCache,
   getAllPhotos,
   getSelectedPhotos,
   updatePhotoSelection,
@@ -13,6 +12,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import _ from "lodash";
 import { Button } from "@repo/ui/components/button";
 import { RefreshCcwIcon } from "lucide-react";
+import { toast } from "react-toastify";
 
 const SelectionList = () => {
   const queryClient = useQueryClient();
@@ -22,7 +22,7 @@ const SelectionList = () => {
     queryFn: async () => await getAllPhotos(),
   });
   const { data: selectedPhotos, isLoading: isSelectedLoading } = useQuery({
-    queryKey: ["photos-selected"],
+    queryKey: ["photos", "photos-selected"],
     queryFn: async () => await getSelectedPhotos(),
   });
   const { mutate: updatePhotoSelectionMutation, isPending } = useMutation({
@@ -31,11 +31,11 @@ const SelectionList = () => {
       await updatePhotoSelection(selection);
     },
     onSuccess: () => {
-      clearPhotosCache({
-        key: ["photos-selected"],
-        redisKey: "photos-selected",
-        queryClient,
-      });
+      queryClient.invalidateQueries({ queryKey: ["photos-selected"] });
+      toast.success("更新名單成功");
+    },
+    onError: () => {
+      toast.error("更新名單失敗");
     },
   });
 
@@ -43,7 +43,7 @@ const SelectionList = () => {
 
   useEffect(() => {
     if (selectedPhotos) {
-      setSelection(selectedPhotos.map((photo) => photo._id));
+      setSelection(selectedPhotos.map((photo) => photo.id));
     }
   }, [selectedPhotos]);
 
@@ -68,7 +68,7 @@ const SelectionList = () => {
             className="border-main hover:bg-main mr-2 border hover:text-white"
             size="icon"
             onClick={async () => {
-              await clearPhotosCache({ key: ["photos"], queryClient });
+              queryClient.invalidateQueries({ queryKey: ["photos"] });
             }}
           >
             <RefreshCcwIcon className="size-5" />
@@ -84,7 +84,7 @@ const SelectionList = () => {
             disabled={
               isPending ||
               _.isEqual(
-                selectedPhotos.map((photo) => photo._id).sort(),
+                selectedPhotos.map((photo) => photo.id).sort(),
                 selection.sort(),
               )
             }
@@ -94,7 +94,7 @@ const SelectionList = () => {
             className="!border-main !text-main border-2 font-bold"
             colour="rgba(0,0,0,0)"
             onClick={() => {
-              setSelection(selectedPhotos.map((photo) => photo._id));
+              setSelection(selectedPhotos.map((photo) => photo.id));
             }}
           />
         </div>
@@ -103,14 +103,14 @@ const SelectionList = () => {
         {data.map((item) => {
           return (
             <SelectionCard
-              key={item._id}
+              key={item.id}
               photoData={item}
-              isSelected={selection.includes(item._id)}
+              isSelected={selection.includes(item.id)}
               onSelect={() => {
                 setSelection((prev) => {
-                  return prev.includes(item._id)
-                    ? prev.filter((photo) => photo !== item._id)
-                    : [...prev, item._id];
+                  return prev.includes(item.id)
+                    ? prev.filter((photo) => photo !== item.id)
+                    : [...prev, item.id];
                 });
               }}
             />

@@ -23,14 +23,14 @@ const FinalRoundClientPage = () => {
     return <div>Loading...</div>;
   }
 
-  const selectedPhotos = photos.filter((photo) => photo?.selected);
-  const otherPhotos = photos.filter((photo) => !photo?.selected);
+  const selectedPhotos = photos.filter((photo) => photo?.is_selected);
+  const otherPhotos = photos.filter((photo) => !photo?.is_selected);
 
   return (
     <>
       <AwardList
         photos={photos}
-        categories={categories.filter((category) => category.special)}
+        categories={categories.filter((category) => category.is_special)}
       />
       <MainJudgeList selectedPhotos={selectedPhotos} />
       <OtherJudgeList otherPhotos={otherPhotos} />

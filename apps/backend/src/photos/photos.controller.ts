@@ -15,16 +15,19 @@ import {
   CreatePhotoDto,
   DeletePhotoDto,
   GetPhotoByIdDto,
+  PhotoDto,
   UpdatePhotoDto,
+  UpdateSelectionDto,
 } from './dto/photos.dto';
-import { ApiParam } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiParam } from '@nestjs/swagger';
 
 @Controller('photos')
 export class PhotosController {
   constructor(private readonly photosService: PhotosService) {}
 
   @Get()
-  async getPhotos(): Promise<Photo[]> {
+  @ApiOkResponse({ type: [PhotoDto] })
+  async getPhotos(): Promise<PhotoDto[]> {
     try {
       return await this.photosService.getPhotos();
     } catch (error) {
@@ -33,7 +36,8 @@ export class PhotosController {
   }
 
   @Get('selected')
-  async getSelectedPhotos(): Promise<Photo[]> {
+  @ApiOkResponse({ type: [PhotoDto] })
+  async getSelectedPhotos(): Promise<PhotoDto[]> {
     try {
       return await this.photosService.getSelectedPhotos();
     } catch (error) {
@@ -43,11 +47,13 @@ export class PhotosController {
 
   @Get(':id')
   @ApiParam({ name: 'id', type: String, required: true })
+  @ApiOkResponse({ type: PhotoDto })
   async getPhotoById(
     @Param() getPhotoByIdDto: GetPhotoByIdDto,
-  ): Promise<Photo> {
+  ): Promise<PhotoDto> {
     try {
-      return await this.photosService.getPhotoById(getPhotoByIdDto);
+      const photo = await this.photosService.getPhotoById(getPhotoByIdDto);
+      return photo;
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -55,9 +61,22 @@ export class PhotosController {
 
   @Post()
   @HttpCode(201)
-  async createPhoto(@Body() createPhotoDto: CreatePhotoDto): Promise<Photo> {
+  @ApiOkResponse({ type: PhotoDto })
+  async createPhoto(@Body() createPhotoDto: CreatePhotoDto): Promise<PhotoDto> {
     try {
       return await this.photosService.createPhoto(createPhotoDto);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  @Post('selection')
+  @HttpCode(201)
+  async updateSelection(
+    @Body() updateSelectionDto: UpdateSelectionDto[],
+  ): Promise<void> {
+    try {
+      return await this.photosService.updateSelection(updateSelectionDto);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -67,7 +86,7 @@ export class PhotosController {
   @HttpCode(201)
   async createPhotosByBatch(
     @Body() createPhotoDtos: CreatePhotoDto[],
-  ): Promise<Photo[]> {
+  ): Promise<PhotoDto[]> {
     try {
       return await this.photosService.createPhotosByBatch(createPhotoDtos);
     } catch (error) {
@@ -76,16 +95,24 @@ export class PhotosController {
   }
 
   @Put(':id')
-  async updatePhoto(@Param() updatePhotoDto: UpdatePhotoDto): Promise<Photo> {
+  async updatePhoto(
+    @Body() updatePhotoDto: UpdatePhotoDto,
+    @Param() photoId: GetPhotoByIdDto,
+  ): Promise<PhotoDto> {
     try {
-      return await this.photosService.updatePhoto(updatePhotoDto);
+      return await this.photosService.updatePhoto({
+        id: photoId.id,
+        ...updatePhotoDto,
+      });
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
   }
 
   @Delete(':id')
-  async deletePhoto(@Param() deletePhotoDto: DeletePhotoDto): Promise<Photo> {
+  async deletePhoto(
+    @Param() deletePhotoDto: DeletePhotoDto,
+  ): Promise<PhotoDto> {
     try {
       return await this.photosService.deletePhoto(deletePhotoDto);
     } catch (error) {

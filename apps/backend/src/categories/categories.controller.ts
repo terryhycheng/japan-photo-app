@@ -12,6 +12,7 @@ import {
 import { CategoriesService } from './categories.service';
 import { Category } from 'src/schemas/categories.schema';
 import {
+  CategoryDto,
   CreateCategoryDto,
   GetCategoryByIdDto,
   UpdateCategoryDto,
@@ -24,7 +25,7 @@ export class CategoriesController {
 
   @Get()
   @HttpCode(200)
-  async getCategories(): Promise<Category[]> {
+  async getCategories(): Promise<CategoryDto[]> {
     try {
       return this.categoriesService.getCategories();
     } catch (error) {
@@ -37,7 +38,7 @@ export class CategoriesController {
   @ApiParam({ name: 'id', type: String, required: true })
   async getCategoryById(
     @Param() { id }: GetCategoryByIdDto,
-  ): Promise<Category> {
+  ): Promise<CategoryDto> {
     try {
       return this.categoriesService.getCategoryById({ id });
     } catch (error) {

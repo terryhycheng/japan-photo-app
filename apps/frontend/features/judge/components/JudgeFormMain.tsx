@@ -14,7 +14,7 @@ import { SaveIcon } from "lucide-react";
 import CustomButton from "@/components/CustomButton";
 import { onJudgeFormMainSubmit } from "../data/forms";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { clearPhotosCache, getPhotoById } from "../data/photos";
+import { getPhotoById } from "../data/photos";
 import { toast } from "react-toastify";
 
 const criterias: {
@@ -68,8 +68,8 @@ const criterias: {
 ];
 
 const judgeFormMainSchema = z.object({
-  score: z.record(z.array(z.number())),
-  comment: z.string(),
+  scores: z.record(z.array(z.number())),
+  comment: z.string().optional(),
 });
 export type JudgeFormMainSchema = z.infer<typeof judgeFormMainSchema>;
 
@@ -86,7 +86,8 @@ const JudgeFormMain = ({ photoId }: { photoId: string }) => {
     mutationFn: (data: { data: JudgeFormMainSchema; photoId: string }) =>
       onJudgeFormMainSubmit(data),
     onSuccess: () => {
-      clearPhotosCache({ key: [["photos", photoId], "photos"], queryClient });
+      queryClient.invalidateQueries({ queryKey: ["photos"] });
+
       toast.success("評分已更新");
     },
     onError: (error) => {
@@ -105,7 +106,7 @@ const JudgeFormMain = ({ photoId }: { photoId: string }) => {
 
   const form = useForm<z.infer<typeof judgeFormMainSchema>>({
     defaultValues: {
-      score: defaultScore,
+      scores: defaultScore,
       comment: "",
     },
   });
@@ -113,7 +114,7 @@ const JudgeFormMain = ({ photoId }: { photoId: string }) => {
   useEffect(() => {
     if (photo) {
       form.reset({
-        score: photo.judge?.scores || defaultScore,
+        scores: photo.judge?.scores || defaultScore,
         comment: photo.judge?.comment || "",
       });
     }
@@ -139,7 +140,7 @@ const JudgeFormMain = ({ photoId }: { photoId: string }) => {
                 <h4 className="font-kiwimaru mb-3 text-lg">{criteria.name}</h4>
                 <FormField
                   control={form.control}
-                  name={`score.${criteria.name}`}
+                  name={`scores.${criteria.name}`}
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
@@ -168,7 +169,7 @@ const JudgeFormMain = ({ photoId }: { photoId: string }) => {
                 <h4 className="font-kiwimaru mb-3 text-lg">{criteria.name}</h4>
                 <FormField
                   control={form.control}
-                  name={`score.${criteria.name}`}
+                  name={`scores.${criteria.name}`}
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>

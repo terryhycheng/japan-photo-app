@@ -13,7 +13,7 @@ import { SaveIcon } from "lucide-react";
 import CustomButton from "@/components/CustomButton";
 import { onJudgeFormOtherSubmit } from "../data/forms";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { clearPhotosCache, getPhotoById } from "../data/photos";
+import { getPhotoById } from "../data/photos";
 import { toast } from "react-toastify";
 import {
   Select,
@@ -50,7 +50,7 @@ const JudgeFormOthers = ({ photoId }: { photoId: string }) => {
     queryKey: ["categories"],
     queryFn: async () => {
       const allCategories = await getAllCategories();
-      return allCategories.filter((category) => !category.special);
+      return allCategories.filter((category) => !category.is_special);
     },
   });
 
@@ -59,7 +59,7 @@ const JudgeFormOthers = ({ photoId }: { photoId: string }) => {
     mutationFn: (data: { data: JudgeFormOthersSchema; photoId: string }) =>
       onJudgeFormOtherSubmit(data),
     onSuccess: () => {
-      clearPhotosCache({ key: [["photos", photoId], "photos"], queryClient });
+      queryClient.invalidateQueries({ queryKey: ["photos"] });
       toast.success("評分已更新");
     },
     onError: (error) => {
@@ -122,7 +122,7 @@ const JudgeFormOthers = ({ photoId }: { photoId: string }) => {
                     </FormControl>
                     <SelectContent>
                       {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
+                        <SelectItem key={category._id} value={category._id}>
                           {category.name}
                         </SelectItem>
                       ))}

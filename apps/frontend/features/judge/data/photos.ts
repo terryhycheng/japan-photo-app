@@ -1,4 +1,3 @@
-import { type QueryClient } from "@tanstack/react-query";
 import { PhotoData } from "../types/main";
 
 export const getAllPhotos = async (): Promise<PhotoData[]> => {
@@ -25,13 +24,13 @@ export const getPhotoById = async (photoId: string): Promise<PhotoData> => {
 
 export const updatePhotoSelection = async (photosIds: string[]) => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/photos/selected`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/photos/selection`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ selection: photosIds }),
+      body: JSON.stringify(photosIds),
     },
   );
   if (!res.ok) {
@@ -47,37 +46,4 @@ export const getSelectedPhotos = async (): Promise<PhotoData[]> => {
   }
   const data = await res.json();
   return data;
-};
-
-export const clearPhotosCache = async ({
-  key,
-  redisKey,
-  queryClient,
-}: {
-  key: (string | string[])[];
-  redisKey?: string;
-  queryClient: QueryClient;
-}) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/photos/clear-cache`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ key: redisKey }),
-    },
-  );
-
-  if (!res.ok) {
-    throw new Error("Failed to clear cache");
-  } else {
-    key.forEach((k) => {
-      if (Array.isArray(k)) {
-        queryClient.invalidateQueries({ queryKey: [...k] });
-      } else {
-        queryClient.invalidateQueries({ queryKey: [k] });
-      }
-    });
-  }
 };

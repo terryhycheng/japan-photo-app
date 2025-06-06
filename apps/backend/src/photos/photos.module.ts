@@ -16,5 +16,6 @@ import { AuthorsModule } from 'src/authors/authors.module';
   ],
   providers: [PhotosService],
   controllers: [PhotosController],
+  exports: [PhotosService],
 })
 export class PhotosModule {}

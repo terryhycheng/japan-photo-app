@@ -59,7 +59,7 @@ const OtherCategoryList = () => {
             <div></div>
           </div>
           {categories
-            .filter((category) => !category.special)
+            .filter((category) => !category.is_special)
             .map((category) => (
               <CategoryCard key={category.name} category={category} />
             ))}
@@ -87,7 +87,7 @@ const OtherCategoryList = () => {
             <div></div>
           </div>
           {categories
-            .filter((category) => category.special)
+            .filter((category) => category.is_special)
             .map((category) => (
               <CategoryCard key={category.name} category={category} />
             ))}
@@ -102,9 +102,7 @@ export default OtherCategoryList;
 const CategoryCard = ({ category }: { category: Category }) => {
   return (
     <div className="flex justify-between gap-6 rounded-lg bg-white p-6">
-      <h3 className="font-kiwimaru w-1/5 text-xl font-bold">
-        {category.name}類
-      </h3>
+      <h3 className="font-kiwimaru w-1/5 text-xl font-bold">{category.name}</h3>
       <p className="font-kiwimaru flex-1">{category.description}</p>
       <div className="flex w-1/5 items-center justify-end gap-3">
         <Button variant="outline" size="icon" className="bg-transparent">

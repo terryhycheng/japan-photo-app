@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { Category, PhotoData, photoDataSchema } from "../types/main";
+import { Category, PhotoData } from "../types/main";
 import Image from "next/image";
 import CustomButton from "@/components/CustomButton";
 import { PlusIcon, RefreshCcwIcon, SaveIcon, TrashIcon } from "lucide-react";
@@ -31,15 +31,15 @@ const AWARD_KEYS = [
 const AwardForm = z.object({
   best_angle: z.object({
     categoryId: z.string(),
-    photo: photoDataSchema.optional(),
+    awardPhoto: z.string().optional(),
   }),
   best_creativtiy: z.object({
     categoryId: z.string(),
-    photo: photoDataSchema.optional(),
+    awardPhoto: z.string().optional(),
   }),
   best_cultral_value: z.object({
     categoryId: z.string(),
-    photo: photoDataSchema.optional(),
+    awardPhoto: z.string().optional(),
   }),
 });
 
@@ -59,7 +59,7 @@ const AwardList = ({
     mutationFn: ({
       awards,
     }: {
-      awards: { categoryId: string; photo: PhotoData | undefined }[];
+      awards: { categoryId: string; photoId: string | undefined }[];
     }) => {
       return onAssignAwardSubmit({ awards });
     },
@@ -85,18 +85,18 @@ const AwardList = ({
 
     return {
       best_angle: {
-        categoryId: bestAngle?.id || "",
-        photo: bestAngle?.award,
+        categoryId: bestAngle?._id || "",
+        awardPhoto: bestAngle?.awardPhoto,
       },
       best_creativtiy: {
-        categoryId: bestCreativity?.id || "",
-        photo: bestCreativity?.award,
+        categoryId: bestCreativity?._id || "",
+        awardPhoto: bestCreativity?.awardPhoto,
       },
       best_cultral_value: {
-        categoryId: bestCulturalValue?.id || "",
-        photo: bestCulturalValue?.award,
+        categoryId: bestCulturalValue?._id || "",
+        awardPhoto: bestCulturalValue?.awardPhoto,
       },
-    };
+    } satisfies AwardFormType;
   }, [categories]);
 
   const form = useForm<AwardFormType>({
@@ -111,13 +111,13 @@ const AwardList = ({
   );
 
   const handleSubmit = (data: AwardFormType) => {
-    const awardArray: { categoryId: string; photo: PhotoData | undefined }[] =
+    const awardArray: { categoryId: string; photoId: string | undefined }[] =
       [];
 
     Object.entries(data).forEach(([_, value]) => {
       awardArray.push({
         categoryId: value.categoryId,
-        photo: value.photo,
+        photoId: value.awardPhoto,
       });
     });
 
@@ -173,7 +173,8 @@ const AwardCard = ({
   let awardName: string = "";
 
   const awardValue = form.watch(awardKey);
-  const photo = photos.find((photo) => photo.id === awardValue.photo?.id);
+  const photo = photos.find((photo) => photo.id === awardValue.awardPhoto);
+
   const isAwarded = awardValue !== undefined && photo;
 
   switch (awardKey) {
@@ -197,7 +198,13 @@ const AwardCard = ({
 
         <div className="relative h-[20vh] w-full bg-white/20">
           {isAwarded && (
-            <Image src={photo.url} alt="award" fill className="object-cover" />
+            <Image
+              src={photo.url}
+              alt="award"
+              className="object-cover"
+              fill
+              sizes="100%"
+            />
           )}
           <div className="absolute right-1/2 bottom-6 translate-x-1/2">
             {isAwarded ? (
@@ -216,7 +223,7 @@ const AwardCard = ({
                   onClick={() => {
                     form.setValue(awardKey, {
                       categoryId,
-                      photo: undefined,
+                      awardPhoto: undefined,
                     });
                   }}
                 />
@@ -249,10 +256,10 @@ const AwardCard = ({
               key={photo.id}
               disabled={true}
               onClick={() => {
-                if (awardValue.photo?.id !== photo.id) {
+                if (awardValue.awardPhoto !== photo.id) {
                   form.setValue(awardKey, {
                     categoryId,
-                    photo,
+                    awardPhoto: photo.id,
                   });
                   setIsOpen(false);
                 }
@@ -263,7 +270,7 @@ const AwardCard = ({
                   "relative h-40 overflow-hidden rounded-sm bg-white/20",
                   {
                     "animate-pulse !cursor-not-allowed border-3 border-red-700":
-                      awardValue.photo?.id === photo.id,
+                      awardValue.awardPhoto === photo.id,
                   },
                 )}
               >

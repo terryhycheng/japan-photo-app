@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Author, AuthorDocument } from 'src/schemas/author.schema';
 import { Model } from 'mongoose';
-import { CreateAuthorDto, GetAuthorByIdDto } from './dto/author.dto';
+import { AuthorDto, CreateAuthorDto, GetAuthorByIdDto } from './dto/author.dto';
 
 @Injectable()
 export class AuthorsService {
@@ -14,13 +14,17 @@ export class AuthorsService {
     return this.authorModel.find().exec();
   }
 
-  async getAuthorById({ id }: GetAuthorByIdDto): Promise<Author> {
+  async getAuthorById({ id }: GetAuthorByIdDto): Promise<AuthorDto> {
     const author = await this.authorModel.findById(id).exec();
 
     if (!author) {
       throw new NotFoundException('Invalid author id');
     }
-    return author;
+    return {
+      id: author._id.toString(),
+      code: author.code,
+      name: author.name,
+    };
   }
 
   async createAuthor(createAuthorDto: CreateAuthorDto): Promise<Author> {

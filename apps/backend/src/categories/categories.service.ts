@@ -3,11 +3,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Category, CategoryDocument } from 'src/schemas/categories.schema';
 import {
+  CategoryDto,
   CreateCategoryDto,
   DeleteCategoryDto,
   GetCategoryByIdDto,
   UpdateCategoryDto,
 } from './dto/category.dto';
+import { PhotoDocument } from 'src/schemas/photo.schema';
 
 @Injectable()
 export class CategoriesService {
@@ -15,17 +17,47 @@ export class CategoriesService {
     @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>,
   ) {}
 
-  async getCategories(): Promise<Category[]> {
-    return this.categoryModel.find().exec();
+  async getCategories(): Promise<CategoryDto[]> {
+    const categories = await this.categoryModel
+      .find()
+      .populate<{ awardPhoto: PhotoDocument }>({
+        path: 'awardPhoto',
+        populate: {
+          path: 'author',
+        },
+      })
+      .exec();
+
+    return categories.map((category) => ({
+      id: category._id.toString(),
+      name: category.name,
+      description: category.description,
+      awardPhoto: category.awardPhoto?._id.toString(),
+      is_special: category.is_special,
+    }));
   }
 
-  async getCategoryById({ id }: GetCategoryByIdDto): Promise<Category> {
-    const category = await this.categoryModel.findById(id).exec();
+  async getCategoryById({ id }: GetCategoryByIdDto): Promise<CategoryDto> {
+    const category = await this.categoryModel
+      .findById(id)
+      .populate<{ awardPhoto: PhotoDocument }>({
+        path: 'awardPhoto',
+        populate: {
+          path: 'author',
+        },
+      })
+      .exec();
 
     if (!category) {
       throw new NotFoundException('Invalid category id');
     }
-    return category;
+    return {
+      id: category._id.toString(),
+      name: category.name,
+      description: category.description,
+      awardPhoto: category.awardPhoto?._id.toString(),
+      is_special: category.is_special,
+    };
   }
 
   async createCategory(categoryDto: CreateCategoryDto): Promise<Category> {
@@ -36,7 +68,9 @@ export class CategoriesService {
   async updateCategory(categoryDto: UpdateCategoryDto): Promise<Category> {
     const category = await this.categoryModel.findByIdAndUpdate(
       categoryDto.id,
-      categoryDto,
+      {
+        awardPhoto: categoryDto.awardPhoto,
+      },
     );
 
     if (!category) {

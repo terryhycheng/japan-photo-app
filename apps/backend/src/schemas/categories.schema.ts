@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
+import { Photo } from './photo.schema';
 
 export type CategoryDocument = HydratedDocument<Category>;
 
@@ -13,6 +14,9 @@ export class Category {
 
   @Prop({ default: false })
   is_special: boolean;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Photo' })
+  awardPhoto?: Photo;
 
   @Prop({ default: Date.now })
   createdAt: Date;

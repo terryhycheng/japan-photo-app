@@ -24,7 +24,7 @@ export const onJudgeFormMainSubmit = async ({
       },
       method: "POST",
       body: JSON.stringify({
-        scores: data.score,
+        scores: data.scores,
         comment: data.comment === "" ? null : data.comment,
       }),
     },
@@ -39,7 +39,6 @@ export const onJudgeFormOtherSubmit = async ({
   data,
   photoId,
 }: JudgeFormOtherData) => {
-  console.log({ data, photoId });
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/judge/other/${photoId}`,
     {
@@ -62,7 +61,7 @@ export const onJudgeFormOtherSubmit = async ({
 export const onAssignAwardSubmit = async ({
   awards,
 }: {
-  awards: { categoryId: string; photo: PhotoData | undefined }[];
+  awards: { categoryId: string; photoId: string | undefined }[];
 }) => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/judge/assign-award`,

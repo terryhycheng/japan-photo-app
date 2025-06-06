@@ -1,4 +1,4 @@
-import { OmitType, PartialType, PickType } from '@nestjs/mapped-types';
+import { ApiProperty, OmitType, PartialType, PickType } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsMongoId,
@@ -10,18 +10,27 @@ import {
 export class CategoryDto {
   @IsMongoId()
   @IsNotEmpty()
+  @ApiProperty()
   id: string;
 
   @IsString()
   @IsNotEmpty()
+  @ApiProperty()
   name: string;
 
   @IsString()
   @IsOptional()
+  @ApiProperty()
   description: string;
+
+  @IsMongoId()
+  @IsOptional()
+  @ApiProperty()
+  awardPhoto: string;
 
   @IsBoolean()
   @IsOptional()
+  @ApiProperty()
   is_special: boolean;
 }
 

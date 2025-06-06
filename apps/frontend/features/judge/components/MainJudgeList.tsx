@@ -5,16 +5,14 @@ import { PhotoData } from "../types/main";
 import JudgeCard from "./JudgeCard";
 import { Loader2, RefreshCcwIcon } from "lucide-react";
 import { Button } from "@repo/ui/components/button";
-import { clearPhotosCache } from "../data/photos";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const MainJudgeList = ({ selectedPhotos }: { selectedPhotos: PhotoData[] }) => {
   const queryClient = useQueryClient();
   const { mutate: clearCache, isPending } = useMutation({
     mutationFn: () =>
-      clearPhotosCache({
-        key: ["photos", "photos-selected"],
-        queryClient,
+      queryClient.invalidateQueries({
+        queryKey: ["photos"],
       }),
   });
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
@@ -57,7 +55,6 @@ const MainJudgeList = ({ selectedPhotos }: { selectedPhotos: PhotoData[] }) => {
               isSelectedPhoto
               setSelectedPhoto={setSelectedPhoto}
               index={index}
-              arrayLength={selectedPhotos.length}
             />
           ))}
         </div>
