@@ -7,12 +7,6 @@ export type PhotoDocument = HydratedDocument<Photo>;
 
 @Schema()
 export class Photo {
-  @Prop()
-  title: string;
-
-  @Prop()
-  description: string;
-
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Author', required: true })
   author: Author;
 
@@ -22,7 +16,7 @@ export class Photo {
   @Prop({ required: true })
   photo_id: string;
 
-  @Prop({ required: true })
+  @Prop({ default: false })
   is_selected: boolean;
 
   @Prop({ required: true })
@@ -30,12 +24,6 @@ export class Photo {
 
   @Prop({ type: Object })
   scores: Record<string, number[]>;
-
-  @Prop({ default: Date.now })
-  createdAt: Date;
-
-  @Prop({ default: Date.now })
-  updatedAt: Date;
 }
 
 export const PhotoSchema = SchemaFactory.createForClass(Photo);

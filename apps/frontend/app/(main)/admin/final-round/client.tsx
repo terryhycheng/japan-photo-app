@@ -1,0 +1,41 @@
+"use client";
+
+import AwardList from "@/features/judge/components/AwardList";
+import MainJudgeList from "@/features/judge/components/MainJudgeList";
+import OtherJudgeList from "@/features/judge/components/OtherJudgeList";
+import { getAllCategories } from "@/features/judge/data/categories";
+import { getAllPhotos } from "@/features/judge/data/photos";
+import { useQuery } from "@tanstack/react-query";
+import React from "react";
+
+const FinalRoundClientPage = () => {
+  const { data: photos, isLoading } = useQuery({
+    queryKey: ["photos"],
+    queryFn: async () => getAllPhotos(),
+  });
+
+  const { data: categories, isLoading: isCategoriesLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => getAllCategories(),
+  });
+
+  if (isLoading || !photos || isCategoriesLoading || !categories) {
+    return <div>Loading...</div>;
+  }
+
+  const selectedPhotos = photos.filter((photo) => photo?.selected);
+  const otherPhotos = photos.filter((photo) => !photo?.selected);
+
+  return (
+    <>
+      <AwardList
+        photos={photos}
+        categories={categories.filter((category) => category.special)}
+      />
+      <MainJudgeList selectedPhotos={selectedPhotos} />
+      <OtherJudgeList otherPhotos={otherPhotos} />
+    </>
+  );
+};
+
+export default FinalRoundClientPage;
