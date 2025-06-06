@@ -85,15 +85,15 @@ const AwardList = ({
 
     return {
       best_angle: {
-        categoryId: bestAngle?._id || "",
+        categoryId: bestAngle?.id || "",
         awardPhoto: bestAngle?.awardPhoto,
       },
       best_creativtiy: {
-        categoryId: bestCreativity?._id || "",
+        categoryId: bestCreativity?.id || "",
         awardPhoto: bestCreativity?.awardPhoto,
       },
       best_cultral_value: {
-        categoryId: bestCulturalValue?._id || "",
+        categoryId: bestCulturalValue?.id || "",
         awardPhoto: bestCulturalValue?.awardPhoto,
       },
     } satisfies AwardFormType;

@@ -21,7 +21,7 @@ export const photoDataSchema = z.object({
 
 export type PhotoData = z.infer<typeof photoDataSchema>;
 
-export type Category = {
+export type CategoryDocument = {
   _id: string;
   description: string;
   name: string;
@@ -29,4 +29,12 @@ export type Category = {
   awardPhoto?: string;
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type Category = {
+  awardPhoto: string;
+  description: string;
+  id: string;
+  is_special: boolean;
+  name: string;
 };

@@ -1,3 +1,4 @@
+import { CategoryFormSchemaType } from "../components/CategoryForm";
 import { JudgeFormMainSchema } from "../components/JudgeFormMain";
 import { JudgeFormOthersSchema } from "../components/JudgeFormOther";
 import { PhotoData } from "../types/main";
@@ -78,5 +79,52 @@ export const onAssignAwardSubmit = async ({
 
   if (!res.ok) {
     throw new Error(`Failed to assign award: ${await res.text()}`);
+  }
+};
+
+export const onCreateCategorySubmit = async (data: CategoryFormSchemaType) => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to create category: ${await res.text()}`);
+  }
+};
+
+export const onUpdateCategorySubmit = async (
+  data: CategoryFormSchemaType,
+  categoryId: string,
+) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/categories/${categoryId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "PUT",
+      body: JSON.stringify(data),
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error(`Failed to create category: ${await res.text()}`);
+  }
+};
+
+export const onDeleteCategorySubmit = async (categoryId: string) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/categories/${categoryId}`,
+    {
+      method: "DELETE",
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error(`Failed to delete category: ${await res.text()}`);
   }
 };

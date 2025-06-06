@@ -10,7 +10,6 @@ import {
   Put,
 } from '@nestjs/common';
 import { PhotosService } from './photos.service';
-import { Photo } from 'src/schemas/photo.schema';
 import {
   CreatePhotoDto,
   DeletePhotoDto,
@@ -19,7 +18,7 @@ import {
   UpdatePhotoDto,
   UpdateSelectionDto,
 } from './dto/photos.dto';
-import { ApiBody, ApiOkResponse, ApiParam } from '@nestjs/swagger';
+import { ApiOkResponse, ApiParam } from '@nestjs/swagger';
 
 @Controller('photos')
 export class PhotosController {

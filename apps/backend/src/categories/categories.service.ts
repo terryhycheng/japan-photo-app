@@ -69,7 +69,7 @@ export class CategoriesService {
     const category = await this.categoryModel.findByIdAndUpdate(
       categoryDto.id,
       {
-        awardPhoto: categoryDto.awardPhoto,
+        ...categoryDto,
       },
     );
 

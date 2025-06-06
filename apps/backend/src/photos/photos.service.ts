@@ -156,25 +156,16 @@ export class PhotosService {
 
   async updateSelection(selection: UpdateSelectionDto[]): Promise<void> {
     const selectedPhotos = await this.getSelectedPhotos();
-
-    // check if the selection is in the selected photos, if not, set them to true
-    const photosToSetTrue = selection.filter(
-      (item) => !selectedPhotos.some((photo) => photo.id === item.id),
-    );
-
-    // check if selected photos are in the selection, if not, set them to false
-    const photosToSetFalse = selectedPhotos
-      .filter((photo) => !selection.some((item) => item.id === photo.id))
-      .map((photo) => photo.id);
+    const selectedPhotoIds = selectedPhotos.map((photo) => photo.id);
 
     await this.photoModel.updateMany(
-      { _id: { $in: photosToSetTrue } },
-      { $set: { is_selected: true } },
-    );
-
-    await this.photoModel.updateMany(
-      { _id: { $in: photosToSetFalse } },
+      { _id: { $nin: selection, $in: selectedPhotoIds } },
       { $set: { is_selected: false } },
+    );
+
+    await this.photoModel.updateMany(
+      { _id: { $in: selection, $nin: selectedPhotoIds } },
+      { $set: { is_selected: true } },
     );
   }
 

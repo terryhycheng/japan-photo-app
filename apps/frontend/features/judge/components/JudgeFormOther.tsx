@@ -122,7 +122,7 @@ const JudgeFormOthers = ({ photoId }: { photoId: string }) => {
                     </FormControl>
                     <SelectContent>
                       {categories.map((category) => (
-                        <SelectItem key={category._id} value={category._id}>
+                        <SelectItem key={category.id} value={category.id}>
                           {category.name}
                         </SelectItem>
                       ))}
