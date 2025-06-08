@@ -46,6 +46,7 @@ export class PhotosService {
       .find()
       .where('is_selected', true)
       .populate<{ author: AuthorDocument }>('author')
+      .populate<{ judge: JudgeDto }>('judge')
       .exec();
 
     return photos.map((photo) => ({
@@ -58,6 +59,7 @@ export class PhotosService {
       photo_id: photo.photo_id,
       is_selected: photo.is_selected,
       url: photo.url,
+      judge: photo.judge,
     }));
   }
 
@@ -167,26 +169,5 @@ export class PhotosService {
       { _id: { $in: selection, $nin: selectedPhotoIds } },
       { $set: { is_selected: true } },
     );
-  }
-
-  async deletePhoto({ id }: DeletePhotoDto): Promise<PhotoDto> {
-    const photo = await this.photoModel
-      .findByIdAndDelete(id)
-      .populate<{ author: AuthorDocument }>('author');
-
-    if (!photo) {
-      throw new NotFoundException('Invalid photo id');
-    }
-    return {
-      id: photo._id.toString(),
-      author: {
-        id: photo.author._id.toString(),
-        name: photo.author.name,
-      },
-      original_filename: photo.original_filename,
-      photo_id: photo.photo_id,
-      is_selected: photo.is_selected,
-      url: photo.url,
-    };
   }
 }

@@ -17,7 +17,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getPhotoById } from "../data/photos";
 import { toast } from "react-toastify";
 
-const criterias: {
+export const criterias: {
   id: string;
   name: string;
   max: number;

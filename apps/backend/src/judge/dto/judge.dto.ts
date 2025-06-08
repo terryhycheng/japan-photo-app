@@ -6,7 +6,9 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { ApiProperty, IntersectionType } from '@nestjs/swagger';
+import { ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
+import { PhotoDto } from 'src/photos/dto/photos.dto';
+import { AuthorDto } from 'src/authors/dto/author.dto';
 
 // ------------ Common ------------
 
@@ -110,4 +112,87 @@ export class AssignAwardBody {
     categoryId: string;
     photoId: string;
   }[];
+}
+
+export class SpecialAwardDto {
+  @ApiProperty({
+    description: 'The photo',
+    example: {
+      id: '123',
+      url: '/photos/000039590015.webp',
+    },
+  })
+  photo: {
+    id: string;
+    url: string;
+  };
+
+  @ApiProperty({
+    description: 'The author',
+    example: {
+      id: '123',
+      name: 'John Doe',
+    },
+  })
+  author: {
+    id: string;
+    name: string;
+  };
+
+  @ApiProperty({
+    description: 'The category',
+    example: {
+      id: '123',
+      name: 'Category 1',
+    },
+  })
+  category: {
+    id: string;
+    name: string;
+  };
+}
+
+export class RankingDto {
+  @ApiProperty({
+    description: 'The photo',
+    example: {
+      id: '123',
+      total_score: 42.32,
+      scores: {
+        恰當角度: [10],
+      },
+      comment: 'This is a comment',
+      url: '/photos/000039590015.webp',
+    },
+  })
+  photo: {
+    id: string;
+    total_score: number;
+    scores: Record<string, number[]>;
+    comment?: string;
+    url: string;
+  };
+
+  @ApiProperty({
+    description: 'The author',
+    example: {
+      id: '123',
+      name: 'John Doe',
+    },
+  })
+  author: {
+    id: string;
+    name: string;
+  };
+}
+
+export class ResultDto {
+  @ApiProperty({
+    description: 'The result',
+    example: {
+      'John Doe': 100,
+      'Jane Doe': 90,
+    },
+  })
+  result: Record<string, number>;
 }

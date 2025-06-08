@@ -18,7 +18,7 @@ export class AuthorsController {
 
   @Get()
   @HttpCode(200)
-  async getAuthors(): Promise<Author[]> {
+  async getAuthors(): Promise<AuthorDto[]> {
     try {
       return await this.authorsService.getAuthors();
     } catch (error) {

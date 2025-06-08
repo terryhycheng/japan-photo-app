@@ -10,8 +10,17 @@ export class AuthorsService {
     @InjectModel(Author.name) private authorModel: Model<AuthorDocument>,
   ) {}
 
-  async getAuthors(): Promise<Author[]> {
-    return this.authorModel.find().exec();
+  async getAuthors(): Promise<AuthorDto[]> {
+    return this.authorModel
+      .find()
+      .exec()
+      .then((authors) =>
+        authors.map((author) => ({
+          id: author._id.toString(),
+          code: author.code,
+          name: author.name,
+        })),
+      );
   }
 
   async getAuthorById({ id }: GetAuthorByIdDto): Promise<AuthorDto> {

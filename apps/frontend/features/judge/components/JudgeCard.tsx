@@ -63,7 +63,7 @@ const JudgeCard = ({
           </div>
         </DialogTrigger>
       </div>
-      <DialogContent className="w-full !max-w-none overflow-hidden border-none p-0 text-white lg:w-[70vw]">
+      <DialogContent className="max-h-screen w-full !max-w-none overflow-auto border-none p-0 text-white lg:w-[70vw]">
         <DialogTitle className="sr-only">
           {photoData.original_filename}
         </DialogTitle>

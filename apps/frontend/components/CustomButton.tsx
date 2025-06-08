@@ -55,7 +55,7 @@ const CustomButton = ({
       >
         {icons?.IconLeft && <icons.IconLeft style={{ color: iconColour }} />}
         {text && (
-          <span className="font-kiwimaru tracking-[0.2rem]">{text}</span>
+          <span className="font-kiwimaru mx-1 tracking-[0.2rem]">{text}</span>
         )}
         {icons?.IconRight && <icons.IconRight style={{ color: iconColour }} />}
       </Link>

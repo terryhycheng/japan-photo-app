@@ -58,17 +58,6 @@ export class PhotosController {
     }
   }
 
-  @Post()
-  @HttpCode(201)
-  @ApiOkResponse({ type: PhotoDto })
-  async createPhoto(@Body() createPhotoDto: CreatePhotoDto): Promise<PhotoDto> {
-    try {
-      return await this.photosService.createPhoto(createPhotoDto);
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
-  }
-
   @Post('selection')
   @HttpCode(201)
   async updateSelection(
@@ -103,17 +92,6 @@ export class PhotosController {
         id: photoId.id,
         ...updatePhotoDto,
       });
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
-  }
-
-  @Delete(':id')
-  async deletePhoto(
-    @Param() deletePhotoDto: DeletePhotoDto,
-  ): Promise<PhotoDto> {
-    try {
-      return await this.photosService.deletePhoto(deletePhotoDto);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }

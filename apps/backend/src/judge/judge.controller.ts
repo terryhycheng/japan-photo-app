@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   InternalServerErrorException,
   Param,
@@ -11,8 +12,15 @@ import {
   CreateMainJudgeBody,
   CreateOtherJudgeBody,
   JudgeParams,
+  RankingDto,
+  ResultDto,
+  SpecialAwardDto,
 } from './dto/judge.dto';
-import { ApiCreatedResponse, ApiNotFoundResponse } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 import { JudgeService } from './judge.service';
 import { ApiCommonResponses, ApiSummary } from 'src/common/common.decorator';
 
@@ -20,6 +28,51 @@ import { ApiCommonResponses, ApiSummary } from 'src/common/common.decorator';
 @ApiCommonResponses()
 export class JudgeController {
   constructor(private readonly judgeService: JudgeService) {}
+
+  @Get('result')
+  @HttpCode(200)
+  @ApiSummary('Get the total score of all photos')
+  @ApiOkResponse({
+    description: 'The result',
+    type: ResultDto,
+  })
+  async getTotalScore(): Promise<ResultDto> {
+    try {
+      return await this.judgeService.calculateResult();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  @Get('special-awards')
+  @HttpCode(200)
+  @ApiSummary('Get the special awards')
+  @ApiOkResponse({
+    description: 'The special awards',
+    type: [SpecialAwardDto],
+  })
+  async getSpecialAwards(): Promise<SpecialAwardDto[]> {
+    try {
+      return await this.judgeService.getSpecialAwards();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  @Get('ranking')
+  @HttpCode(200)
+  @ApiSummary('Get the ranking')
+  @ApiOkResponse({
+    description: 'The ranking',
+    type: [RankingDto],
+  })
+  async getRanking(): Promise<RankingDto[]> {
+    try {
+      return await this.judgeService.getRanking();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
 
   @Post('/main/:photoId')
   @HttpCode(201)
