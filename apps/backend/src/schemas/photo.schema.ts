@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import * as mongoose from 'mongoose';
 import { Author } from './author.schema';
+import { Category } from './categories.schema';
 
 export type PhotoDocument = HydratedDocument<Photo>;
 
@@ -26,7 +27,7 @@ export class Photo {
   judge?: {
     scores?: Record<string, number[]>;
     comment?: string;
-    categoryId?: string;
+    categoryId?: mongoose.Types.ObjectId | Category;
   };
 }
 

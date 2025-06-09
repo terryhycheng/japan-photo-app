@@ -4,6 +4,7 @@ import {
   AssignAwardBody,
   CreateMainJudgeDto,
   CreateOtherJudgeDto,
+  OtherPhotoResultDto,
   RankingDto,
   ResultDto,
   SpecialAwardDto,
@@ -12,6 +13,7 @@ import { CategoriesService } from 'src/categories/categories.service';
 import { AuthorsService } from 'src/authors/authors.service';
 import { markingScheme } from './utils/markings';
 import * as _ from 'lodash';
+import { OtherPhotoDto } from 'src/photos/dto/photos.dto';
 
 @Injectable()
 export class JudgeService {
@@ -166,9 +168,6 @@ export class JudgeService {
         continue;
       }
 
-      // limit the number of photos to 15
-      if (ranking.length >= 15) break;
-
       const totalScore = Object.entries(photo.judge.scores).reduce(
         (acc, [_, score]) => {
           acc += score[0];
@@ -197,5 +196,32 @@ export class JudgeService {
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
+  }
+
+  async getOtherPhotoResult(): Promise<OtherPhotoResultDto> {
+    const otherPhotos = await this.photosService.getOtherPhotos();
+    const result: OtherPhotoResultDto = {
+      result: {},
+    };
+
+    for (const photo of otherPhotos) {
+      if (!photo.judge) {
+        continue;
+      }
+
+      if (!result.result[photo.judge.category.name]) {
+        result.result[photo.judge.category.name] = {
+          details: {
+            name: photo.judge.category.name,
+            description: photo.judge.category.description,
+          },
+          photos: [],
+        };
+      }
+
+      result.result[photo.judge.category.name].photos.push(photo);
+    }
+
+    return result;
   }
 }

@@ -27,7 +27,7 @@ const SpecialAwardList = () => {
         <h2 className="text-4xl">特別獎項</h2>
         <p>由評審選出三名最具特色的相片以作鼓勵</p>
       </div>
-      <div className="grid w-full grid-cols-3 gap-4">
+      <div className="grid w-full gap-4 px-2 lg:grid-cols-3">
         {specialAwards.map((data) => (
           <SpecialAwardCard key={data.photo.id} photoData={data} />
         ))}

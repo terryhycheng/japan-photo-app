@@ -1,3 +1,5 @@
+import { Category, PhotoData } from "@/features/judge/types/main";
+
 export type RankingData = {
   photo: {
     id: string;
@@ -29,4 +31,17 @@ export type SpecialAwardData = {
 
 export type ResultData = {
   result: Record<string, number>;
+};
+
+export type OtherPhoto = {
+  details: {
+    name: string;
+    description: string;
+  };
+  photos: (Omit<PhotoData, "judge"> & {
+    judge?: {
+      category: Pick<Category, "name" | "description">;
+      comment: string;
+    };
+  })[];
 };

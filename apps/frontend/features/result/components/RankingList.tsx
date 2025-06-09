@@ -25,8 +25,8 @@ const RankingList = () => {
           <h2 className="text-4xl">作品排行榜</h2>
           <p>點擊相片以觀看個別評價以及評分細節</p>
         </div>
-        <div className="grid w-full gap-4 lg:grid-cols-3">
-          {rankingData.map((data, index) => (
+        <div className="grid w-full gap-4 px-2 lg:grid-cols-3">
+          {rankingData.slice(0, 15).map((data, index) => (
             <RankingCard key={data.photo.id} photoData={data} index={index} />
           ))}
         </div>

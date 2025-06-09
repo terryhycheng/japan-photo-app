@@ -6,6 +6,7 @@ import {
   CreatePhotoDto,
   DeletePhotoDto,
   GetPhotoByIdDto,
+  OtherPhotoDto,
   PhotoDto,
   UpdatePhotoDto,
   UpdateSelectionDto,
@@ -13,6 +14,7 @@ import {
 import { AuthorsService } from 'src/authors/authors.service';
 import { AuthorDocument } from 'src/schemas/author.schema';
 import { JudgeDto } from 'src/judge/dto/judge.dto';
+import { CategoryDocument } from 'src/schemas/categories.schema';
 
 @Injectable()
 export class PhotosService {
@@ -169,5 +171,40 @@ export class PhotosService {
       { _id: { $in: selection, $nin: selectedPhotoIds } },
       { $set: { is_selected: true } },
     );
+  }
+
+  async getOtherPhotos(): Promise<OtherPhotoDto[]> {
+    const categorisedOtherPhotos = await this.photoModel
+      .find()
+      .where({ is_selected: false, judge: { $exists: true } })
+      .populate<{ author: AuthorDocument }>('author')
+      .populate<{ judge: { categoryId: CategoryDocument; comment: string } }>({
+        path: 'judge.categoryId',
+        model: 'Category',
+      })
+      .exec();
+
+    const result: OtherPhotoDto[] = categorisedOtherPhotos.map((photo) => {
+      return {
+        id: photo._id.toString(),
+        author: {
+          id: photo.author._id.toString(),
+          name: photo.author.name,
+        },
+        original_filename: photo.original_filename,
+        photo_id: photo.photo_id,
+        is_selected: photo.is_selected,
+        url: photo.url,
+        judge: {
+          category: {
+            name: photo.judge.categoryId.name,
+            description: photo.judge.categoryId.description,
+          },
+          comment: photo.judge.comment,
+        },
+      };
+    });
+
+    return result;
   }
 }

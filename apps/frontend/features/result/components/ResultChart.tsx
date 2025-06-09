@@ -47,7 +47,7 @@ export function ResultChart() {
   return (
     <section>
       <div className="container mx-auto my-8">
-        <h2 className="font-kiwimaru text-center text-xl leading-relaxed tracking-wide">
+        <h2 className="font-kiwimaru text-center leading-relaxed tracking-wide lg:text-xl">
           我正式宣布，今次攝影比賽的勝出者是：
           <br />
           <span className="font-dale mt- text-4xl">

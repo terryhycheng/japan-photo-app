@@ -7,8 +7,9 @@ import {
   IsString,
 } from 'class-validator';
 import { ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
-import { PhotoDto } from 'src/photos/dto/photos.dto';
+import { OtherPhotoDto, PhotoDto } from 'src/photos/dto/photos.dto';
 import { AuthorDto } from 'src/authors/dto/author.dto';
+import { CategoryDto } from 'src/categories/dto/category.dto';
 
 // ------------ Common ------------
 
@@ -195,4 +196,44 @@ export class ResultDto {
     },
   })
   result: Record<string, number>;
+}
+
+export class OtherPhotoResultDto {
+  @ApiProperty({
+    example: {
+      可以鼓勵: {
+        details: {
+          name: 'category name',
+          description: 'This is a description',
+        },
+        photos: [
+          {
+            id: 'photo id',
+            author: {
+              id: 'author id',
+              name: 'author name',
+            },
+            original_filename: 'original filename',
+            photo_id: 'photo id',
+            is_selected: false,
+            url: 'url',
+            judge: {
+              category: {
+                name: 'category name',
+                description: 'This is a description',
+              },
+              comment: 'This is a comment',
+            },
+          },
+        ],
+      },
+    },
+  })
+  result: Record<
+    string,
+    {
+      details: Pick<CategoryDto, 'name' | 'description'>;
+      photos: OtherPhotoDto[];
+    }
+  >;
 }

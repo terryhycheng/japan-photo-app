@@ -18,36 +18,29 @@ const SpecialAwardCard = ({ photoData }: { photoData: SpecialAwardData }) => {
     <Dialog>
       <div>
         <div className="font-kiwimaru relative h-72 w-full overflow-hidden rounded-lg">
-          <div
-            className={cn(
-              "relative h-full w-full overflow-hidden rounded-lg border-3 border-transparent",
-            )}
-          >
-            <Image
-              src={photoData.photo.url}
-              alt={photoData.photo.id}
-              height={1000}
-              width={1000}
-              loading="lazy"
-              className="-z-10 h-full w-full object-cover"
-            />
-          </div>
           <DialogTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="absolute top-4 left-4 z-10 border-none bg-black/50 text-white"
+            <div
+              className={cn(
+                "relative h-full w-full cursor-pointer overflow-hidden rounded-lg border-3 border-transparent",
+              )}
             >
-              <ExpandIcon className="size-6" />
-            </Button>
+              <Image
+                src={photoData.photo.url}
+                alt={photoData.photo.id}
+                height={1000}
+                width={1000}
+                loading="lazy"
+                className="-z-10 h-full w-full object-cover transition-all hover:scale-105"
+              />
+            </div>
           </DialogTrigger>
         </div>
-        <DialogContent className="max-h-screen w-full !max-w-none overflow-auto border-none bg-black text-white lg:w-[50vw]">
+        <DialogContent className="bg-background max-h-screen w-full !max-w-none overflow-auto border-none lg:w-[50vw]">
           <DialogTitle className="sr-only">
             {photoData.category.name}
           </DialogTitle>
           <div className="flex flex-col gap-4">
-            <div className="relative h-[300px] w-full lg:h-[500px]">
+            <div className="relative h-[60vh] w-full lg:h-[500px]">
               <Image
                 src={photoData.photo.url}
                 alt={photoData.photo.id}

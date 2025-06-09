@@ -14,7 +14,7 @@ import { cn } from "@repo/ui/lib/utils";
 import { RankingData } from "../types/main";
 import { criterias } from "@/features/judge/components/JudgeFormMain";
 
-const RankingCard = ({
+const FirstRoundCard = ({
   photoData,
   index,
 }: {
@@ -46,29 +46,9 @@ const RankingCard = ({
               />
             </div>
           </DialogTrigger>
-          {index < 3 && (
-            <Image
-              src={`/images/metal-${index + 1}.png`}
-              alt={`metal-${index + 1}`}
-              height={1000}
-              width={1000}
-              className="absolute right-2 bottom-2 z-10 h-20 w-auto"
-            />
-          )}
         </div>
-        <DialogContent className="bg-background max-h-[95vh] w-full !max-w-none overflow-auto border-none lg:w-[50vw]">
-          <DialogTitle className="font-dale mx-auto flex items-center gap-2 text-center text-2xl font-normal tracking-wider">
-            {index < 3 && (
-              <Image
-                src={`/images/metal-${index + 1}.png`}
-                alt={`metal-${index + 1}`}
-                height={1000}
-                width={1000}
-                className="h-10 w-auto"
-              />
-            )}
-            第{index + 1}名
-          </DialogTitle>
+        <DialogContent className="bg-background max-h-screen w-full !max-w-none overflow-auto border-none lg:w-[50vw]">
+          <DialogTitle className="font-dale mx-auto flex items-center gap-2 text-center text-2xl font-normal tracking-wider"></DialogTitle>
           <div className="flex flex-col gap-4">
             <div className="relative h-[300px] w-full lg:h-[500px]">
               <Image
@@ -118,7 +98,7 @@ const RankingCard = ({
             </div>
           </div>
         </DialogContent>
-        <p className="font-dale text-center text-2xl">第{index + 1}名</p>
+        <p className="font-dale text-center text-2xl">第{index + 16}名</p>
         <p className="font-kiwimaru text-center text-xl tracking-wide">
           <span>{photoData.photo.total_score}</span> 分 -{" "}
           {photoData.author.name}作品
@@ -128,4 +108,4 @@ const RankingCard = ({
   );
 };
 
-export default RankingCard;
+export default FirstRoundCard;

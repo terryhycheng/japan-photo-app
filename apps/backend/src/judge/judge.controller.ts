@@ -12,6 +12,7 @@ import {
   CreateMainJudgeBody,
   CreateOtherJudgeBody,
   JudgeParams,
+  OtherPhotoResultDto,
   RankingDto,
   ResultDto,
   SpecialAwardDto,
@@ -69,6 +70,21 @@ export class JudgeController {
   async getRanking(): Promise<RankingDto[]> {
     try {
       return await this.judgeService.getRanking();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  @Get('other-photo-result')
+  @HttpCode(200)
+  @ApiSummary('Get the other photo result')
+  @ApiOkResponse({
+    description: 'The other photo result',
+    type: OtherPhotoResultDto,
+  })
+  async getOtherPhotoResult(): Promise<OtherPhotoResultDto> {
+    try {
+      return await this.judgeService.getOtherPhotoResult();
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
