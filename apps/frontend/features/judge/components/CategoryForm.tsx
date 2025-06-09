@@ -49,12 +49,12 @@ const CategoryForm = ({
       return onSubmit(data);
     },
     onSuccess: () => {
-      toast.success("類別新增成功");
       queryClient.invalidateQueries({ queryKey: ["categories"] });
+      toast.success("類別更新成功");
       setIsOpen(false);
     },
     onError: () => {
-      toast.error("類別新增失敗");
+      toast.error("類別更新失敗");
     },
   });
 

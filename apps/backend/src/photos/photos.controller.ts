@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   InternalServerErrorException,
   Param,
   Post,
@@ -19,12 +20,14 @@ import {
   UpdateSelectionDto,
 } from './dto/photos.dto';
 import { ApiOkResponse, ApiParam } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/decorators/auth.decorator';
 
 @Controller('photos')
 export class PhotosController {
   constructor(private readonly photosService: PhotosService) {}
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ type: [PhotoDto] })
   async getPhotos(): Promise<PhotoDto[]> {
     try {
@@ -35,6 +38,7 @@ export class PhotosController {
   }
 
   @Get('selected')
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ type: [PhotoDto] })
   async getSelectedPhotos(): Promise<PhotoDto[]> {
     try {
@@ -45,6 +49,7 @@ export class PhotosController {
   }
 
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   @ApiParam({ name: 'id', type: String, required: true })
   @ApiOkResponse({ type: PhotoDto })
   async getPhotoById(
@@ -59,7 +64,8 @@ export class PhotosController {
   }
 
   @Post('selection')
-  @HttpCode(201)
+  @AuthGuard()
+  @HttpCode(HttpStatus.CREATED)
   async updateSelection(
     @Body() updateSelectionDto: UpdateSelectionDto[],
   ): Promise<void> {
@@ -71,7 +77,8 @@ export class PhotosController {
   }
 
   @Post('batch')
-  @HttpCode(201)
+  @AuthGuard()
+  @HttpCode(HttpStatus.CREATED)
   async createPhotosByBatch(
     @Body() createPhotoDtos: CreatePhotoDto[],
   ): Promise<PhotoDto[]> {
@@ -83,6 +90,8 @@ export class PhotosController {
   }
 
   @Put(':id')
+  @AuthGuard()
+  @HttpCode(HttpStatus.ACCEPTED)
   async updatePhoto(
     @Body() updatePhotoDto: UpdatePhotoDto,
     @Param() photoId: GetPhotoByIdDto,

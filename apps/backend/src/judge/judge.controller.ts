@@ -3,9 +3,11 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpStatus,
   InternalServerErrorException,
   Param,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   AssignAwardBody,
@@ -18,12 +20,15 @@ import {
   SpecialAwardDto,
 } from './dto/judge.dto';
 import {
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
 } from '@nestjs/swagger';
 import { JudgeService } from './judge.service';
 import { ApiCommonResponses, ApiSummary } from 'src/common/common.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { AuthGuard } from 'src/auth/decorators/auth.decorator';
 
 @Controller('judge')
 @ApiCommonResponses()
@@ -31,7 +36,7 @@ export class JudgeController {
   constructor(private readonly judgeService: JudgeService) {}
 
   @Get('result')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @ApiSummary('Get the total score of all photos')
   @ApiOkResponse({
     description: 'The result',
@@ -46,7 +51,7 @@ export class JudgeController {
   }
 
   @Get('special-awards')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @ApiSummary('Get the special awards')
   @ApiOkResponse({
     description: 'The special awards',
@@ -61,7 +66,7 @@ export class JudgeController {
   }
 
   @Get('ranking')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @ApiSummary('Get the ranking')
   @ApiOkResponse({
     description: 'The ranking',
@@ -76,7 +81,7 @@ export class JudgeController {
   }
 
   @Get('other-photo-result')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @ApiSummary('Get the other photo result')
   @ApiOkResponse({
     description: 'The other photo result',
@@ -91,7 +96,8 @@ export class JudgeController {
   }
 
   @Post('/main/:photoId')
-  @HttpCode(201)
+  @AuthGuard()
+  @HttpCode(HttpStatus.ACCEPTED)
   @ApiSummary('Create a main judge for a photo, aka the final round')
   @ApiCreatedResponse({
     description: 'The judge has been added successfully',
@@ -116,7 +122,8 @@ export class JudgeController {
   }
 
   @Post('other/:photoId')
-  @HttpCode(201)
+  @AuthGuard()
+  @HttpCode(HttpStatus.ACCEPTED)
   @ApiSummary(
     'Create a other judge for a photo, including category and comment',
   )
@@ -137,7 +144,8 @@ export class JudgeController {
   }
 
   @Post('assign-award')
-  @HttpCode(201)
+  @AuthGuard()
+  @HttpCode(HttpStatus.ACCEPTED)
   @ApiSummary('Assign an award/category to a photo')
   async assignAward(@Body() body: AssignAwardBody) {
     try {

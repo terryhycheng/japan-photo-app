@@ -6,6 +6,8 @@ import { CategoriesModule } from './categories/categories.module';
 import { AuthorsModule } from './authors/authors.module';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { ThrottlerModule } from '@nestjs/throttler';
     JudgeModule,
     CategoriesModule,
     AuthorsModule,
+    UsersModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

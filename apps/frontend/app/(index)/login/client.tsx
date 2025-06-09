@@ -10,14 +10,16 @@ import {
   FormMessage,
 } from "@repo/ui/components/form";
 import { ArrowRightIcon } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@repo/ui/components/input";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
+import { loginAction } from "@/features/auth/data/auth";
 
 const formSchema = z.object({
   email: z.string().email({ message: "請輸入有效的電子郵件地址" }),
@@ -25,21 +27,39 @@ const formSchema = z.object({
 });
 
 const LoginClientPage = () => {
+  const searchParams = useSearchParams();
+
+  const { mutate: login } = useMutation({
+    mutationKey: ["login"],
+    mutationFn: async (data: z.infer<typeof formSchema>) => {
+      const response = await loginAction(data.email, data.password);
+      return response;
+    },
+    onSuccess: () => {
+      toast.success("登入成功");
+      form.reset();
+      router.push("/admin/manage-resources");
+    },
+    onError: () => {
+      toast.error("電郵地址或密碼錯誤，請重新再試。");
+    },
+  });
+
+  useEffect(() => {
+    const error = searchParams.get("error");
+    if (error === "unauthorized") {
+      toast.error("未經授權，請先登入。");
+    }
+  }, [searchParams]);
+
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "terryhycheng@gmail.com",
-      password: "12345678",
+      email: "",
+      password: "",
     },
   });
-
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
-    toast.success("登入成功");
-    form.reset();
-    router.push("/admin/manage-resources");
-  };
 
   return (
     <main className="bg-photo relative flex flex-1 items-center justify-center">
@@ -48,7 +68,10 @@ const LoginClientPage = () => {
           評審登入
         </h1>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form
+            onSubmit={form.handleSubmit((data) => login(data))}
+            className="space-y-6"
+          >
             <FormField
               control={form.control}
               name="email"

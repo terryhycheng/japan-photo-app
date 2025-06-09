@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpStatus,
   InternalServerErrorException,
   Param,
   Post,
@@ -11,13 +12,14 @@ import { AuthorsService } from './authors.service';
 import { AuthorDto, CreateAuthorDto, GetAuthorByIdDto } from './dto/author.dto';
 import { Author } from 'src/schemas/author.schema';
 import { ApiBody, ApiParam } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/decorators/auth.decorator';
 
 @Controller('authors')
 export class AuthorsController {
   constructor(private readonly authorsService: AuthorsService) {}
 
   @Get()
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async getAuthors(): Promise<AuthorDto[]> {
     try {
       return await this.authorsService.getAuthors();
@@ -27,7 +29,7 @@ export class AuthorsController {
   }
 
   @Get(':id')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @ApiParam({ name: 'id', type: String, required: true })
   async getAuthorById(
     @Param() getAuthorByIdDto: GetAuthorByIdDto,
@@ -40,7 +42,8 @@ export class AuthorsController {
   }
 
   @Post()
-  @HttpCode(201)
+  @AuthGuard()
+  @HttpCode(HttpStatus.CREATED)
   @ApiBody({
     type: CreateAuthorDto,
     required: true,

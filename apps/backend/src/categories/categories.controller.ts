@@ -4,10 +4,12 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   InternalServerErrorException,
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { Category } from 'src/schemas/categories.schema';
@@ -17,14 +19,16 @@ import {
   GetCategoryByIdDto,
   UpdateCategoryDto,
 } from './dto/category.dto';
-import { ApiBody, ApiParam } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiParam } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { AuthGuard } from 'src/auth/decorators/auth.decorator';
 
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Get()
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async getCategories(): Promise<CategoryDto[]> {
     try {
       return this.categoriesService.getCategories();
@@ -34,7 +38,7 @@ export class CategoriesController {
   }
 
   @Get(':id')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @ApiParam({ name: 'id', type: String, required: true })
   async getCategoryById(
     @Param() { id }: GetCategoryByIdDto,
@@ -47,7 +51,8 @@ export class CategoriesController {
   }
 
   @Post()
-  @HttpCode(201)
+  @AuthGuard()
+  @HttpCode(HttpStatus.CREATED)
   @ApiBody({
     type: CreateCategoryDto,
     required: true,
@@ -72,7 +77,8 @@ export class CategoriesController {
   }
 
   @Put(':id')
-  @HttpCode(202)
+  @AuthGuard()
+  @HttpCode(HttpStatus.ACCEPTED)
   async updateCategory(
     @Param() { id }: GetCategoryByIdDto,
     @Body() updateCategoryDto: UpdateCategoryDto,
@@ -88,7 +94,8 @@ export class CategoriesController {
   }
 
   @Delete(':id')
-  @HttpCode(202)
+  @AuthGuard()
+  @HttpCode(HttpStatus.ACCEPTED)
   async deleteCategory(@Param() { id }: GetCategoryByIdDto): Promise<Category> {
     try {
       return this.categoriesService.deleteCategory({ id });

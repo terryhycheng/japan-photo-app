@@ -13,6 +13,11 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Japan Photos API')
     .setDescription('API for Japan Photos')
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+    })
     .setVersion('1.0')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);

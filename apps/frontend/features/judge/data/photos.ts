@@ -1,3 +1,4 @@
+import { verifyAction } from "@/features/auth/data/auth";
 import { PhotoData } from "../types/main";
 
 export const getAllPhotos = async (): Promise<PhotoData[]> => {
@@ -23,12 +24,16 @@ export const getPhotoById = async (photoId: string): Promise<PhotoData> => {
 };
 
 export const updatePhotoSelection = async (photosIds: string[]) => {
+  const decoded = await verifyAction();
+  if (!decoded) throw new Error("Unauthorized access");
+
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/photos/selection`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${decoded.token}`,
       },
       body: JSON.stringify(photosIds),
     },
