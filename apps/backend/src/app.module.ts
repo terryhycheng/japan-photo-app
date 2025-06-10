@@ -32,7 +32,13 @@ import { AuthModule } from './auth/auth.module';
       },
     ]),
     MongooseModule.forRoot(
-      'mongodb://root:example@localhost:27017/jp-photos?authSource=admin',
+      process.env.MONGODB_URI ??
+        'mongodb://root:example@localhost:27017/jp-photos?authSource=admin',
+      {
+        retryWrites: true,
+        retryReads: true,
+        wtimeoutMS: 2400,
+      },
     ),
     PhotosModule,
     JudgeModule,

@@ -5,7 +5,7 @@ export class LoginDto {
   @IsEmail()
   @IsNotEmpty()
   @ApiProperty()
-  email: string;
+  username: string;
 
   @IsString()
   @IsNotEmpty()
@@ -22,7 +22,7 @@ export class SignUpDto extends LoginDto {
   confirmPassword: string;
 }
 
-export class SignUpResponseDto extends PickType(SignUpDto, ['email']) {
+export class SignUpResponseDto extends PickType(SignUpDto, ['username']) {
   @ApiProperty()
   message: string;
 }

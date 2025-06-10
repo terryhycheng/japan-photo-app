@@ -53,7 +53,12 @@ export class PhotoDto {
   url: string;
 }
 
-export class CreatePhotoDto extends OmitType(PhotoDto, ['id']) {}
+export class CreatePhotoDto extends OmitType(PhotoDto, ['id', 'author']) {
+  @IsMongoId()
+  @IsNotEmpty()
+  @ApiProperty()
+  author: string;
+}
 export class UpdatePhotoDto extends PartialType(PhotoDto) {}
 export class GetPhotoByIdDto extends PickType(PhotoDto, ['id']) {}
 export class DeletePhotoDto extends PickType(PhotoDto, ['id']) {}

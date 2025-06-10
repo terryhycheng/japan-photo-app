@@ -33,6 +33,7 @@ export class PhotosController {
     try {
       return await this.photosService.getPhotos();
     } catch (error) {
+      console.log(error.message);
       throw new InternalServerErrorException(error);
     }
   }
@@ -79,12 +80,11 @@ export class PhotosController {
   @Post('batch')
   @AuthGuard()
   @HttpCode(HttpStatus.CREATED)
-  async createPhotosByBatch(
-    @Body() createPhotoDtos: CreatePhotoDto[],
-  ): Promise<PhotoDto[]> {
+  async createPhotosByBatch(@Body() createPhotoDtos: CreatePhotoDto[]) {
     try {
       return await this.photosService.createPhotosByBatch(createPhotoDtos);
     } catch (error) {
+      console.log(error.message);
       throw new InternalServerErrorException(error);
     }
   }

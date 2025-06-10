@@ -29,6 +29,7 @@ export class PhotosService {
       .populate<{ author: AuthorDocument }>('author')
       .populate<{ judge: JudgeDto }>('judge')
       .exec();
+
     return photos.map((photo) => ({
       id: photo._id.toString(),
       author: {
@@ -89,36 +90,27 @@ export class PhotosService {
     };
   }
 
-  async createPhotosByBatch(
-    createPhotoDtos: CreatePhotoDto[],
-  ): Promise<PhotoDto[]> {
-    const data = await Promise.all(
-      createPhotoDtos.map(async (photo) => {
-        const author = await this.authorsService.getAuthorById({
-          id: photo.author.id,
-        });
-        return {
-          ...photo,
-          author,
-        };
-      }),
-    );
+  async createPhotosByBatch(createPhotoDtos: CreatePhotoDto[]) {
+    const authors = await this.authorsService.getAuthors();
 
-    const photos = await this.photoModel.insertMany(data);
-    return photos.map((photo) => ({
-      ...photo,
-      id: photo._id.toString(),
-      author: {
-        id: photo.author.id,
-        name: photo.author.name,
-      },
-      original_filename: photo.original_filename,
-    }));
+    const authorMap = new Map(authors.map((author) => [author.id, author]));
+
+    const data = createPhotoDtos.map((photo) => {
+      const author = authorMap.get(photo.author);
+
+      return {
+        ...photo,
+        author: author?.id,
+      };
+    });
+
+    const photos = await this.photoModel.create(data);
+    return photos;
   }
 
   async createPhoto(createPhotoDto: CreatePhotoDto): Promise<PhotoDto> {
     const author = await this.authorsService.getAuthorById({
-      id: createPhotoDto.author.id,
+      id: createPhotoDto.author,
     });
 
     const photo = new this.photoModel({

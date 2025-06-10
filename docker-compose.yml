@@ -1,6 +1,17 @@
 # Use root/example as user/password credentials
 
 services:
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: jp-photos
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
   mongo:
     image: mongo
     restart: always
@@ -26,3 +37,6 @@ services:
     restart: always
     ports:
       - 6379:6379
+
+volumes:
+  postgres_data:

@@ -29,6 +29,7 @@ export class AuthorsService {
     if (!author) {
       throw new NotFoundException('Invalid author id');
     }
+
     return {
       id: author._id.toString(),
       code: author.code,

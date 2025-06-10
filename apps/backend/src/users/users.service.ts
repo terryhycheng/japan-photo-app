@@ -21,7 +21,7 @@ export class UsersService {
     const hashedPassword = await argon2.hash(signUpDto.password);
 
     const user = new this.userModel({
-      email: signUpDto.email,
+      email: signUpDto.username,
       password: hashedPassword,
     });
 

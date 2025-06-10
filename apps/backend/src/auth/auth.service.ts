@@ -43,7 +43,7 @@ export class AuthService {
   async signUp(signUpDto: SignUpDto): Promise<SignUpResponseDto> {
     const user = await this.usersService.createUser(signUpDto);
     return {
-      email: user.email,
+      username: user.email,
       message: 'User created successfully',
     };
   }
