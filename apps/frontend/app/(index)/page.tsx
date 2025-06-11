@@ -55,7 +55,8 @@ export default async function Home() {
       <div className="absolute bottom-[2vh] left-1/2 z-20 flex -translate-x-1/2 flex-col gap-4">
         <CustomButton
           href="/results"
-          className="relative z-20 flex w-[90vw] justify-center text-4xl lg:hidden"
+          className="relative z-20 flex w-[90vw] justify-center text-2xl lg:hidden"
+          isDarkenText
           text="結果発表"
           colour="#86CBC4"
           icons={{ IconRight: ArrowRightIcon }}

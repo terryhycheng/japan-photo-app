@@ -26,9 +26,11 @@ const formSchema = z.object({
   password: z.string().min(8, { message: "密碼必須至少包含8個字符" }),
 });
 
-const LoginClientPage = () => {
-  const searchParams = useSearchParams();
-
+const LoginClientPage = ({
+  errorSearchParams,
+}: {
+  errorSearchParams?: string;
+}) => {
   const { mutate: login } = useMutation({
     mutationKey: ["login"],
     mutationFn: async (data: z.infer<typeof formSchema>) => {
@@ -46,11 +48,10 @@ const LoginClientPage = () => {
   });
 
   useEffect(() => {
-    const error = searchParams.get("error");
-    if (error === "unauthorized") {
+    if (errorSearchParams === "unauthorized") {
       toast.error("未經授權，請先登入。");
     }
-  }, [searchParams]);
+  }, [errorSearchParams]);
 
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({

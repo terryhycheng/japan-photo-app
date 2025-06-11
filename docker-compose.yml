@@ -1,17 +1,6 @@
 # Use root/example as user/password credentials
 
 services:
-  postgres:
-    image: postgres
-    restart: always
-    ports:
-      - 5432:5432
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: example
-      POSTGRES_DB: jp-photos
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
   mongo:
     image: mongo
     restart: always
@@ -32,11 +21,25 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
       ME_CONFIG_BASICAUTH: false
 
-  redis:
-    image: redis
-    restart: always
+  web:
+    image: japan-photo-app-web:latest
     ports:
-      - 6379:6379
+      - 3000:3000
+    depends_on:
+      - api
+    networks:
+      - japan-photo-app-network
 
-volumes:
-  postgres_data:
+  api:
+    image: japan-photo-app-api:latest
+    ports:
+      - 3333:3333
+    env_file:
+      - "./apps/backend/.env"
+    networks:
+      - japan-photo-app-network
+
+networks:
+  japan-photo-app-network:
+    name: japan-photo-app-network
+    driver: bridge

@@ -4,7 +4,7 @@ FROM base AS pruner
 WORKDIR /app
 COPY . .
 RUN npm install -g turbo
-RUN turbo prune --scope=api --docker
+RUN turbo prune --scope=backend --docker
 
 FROM base AS installer
 WORKDIR /app
@@ -43,5 +43,5 @@ ENV PORT=3000
 
 EXPOSE 3000
 
-CMD ["node", "apps/api/dist/main.js"]
+CMD ["node", "apps/backend/dist/main.js"]
 

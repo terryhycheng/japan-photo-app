@@ -1,0 +1,34 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  01-build-web-image:
+    desc: Build the web image
+    cmds:
+    - docker build -f apps/frontend/Dockerfile -t japan-photo-app-web:latest --build-arg NEXT_PUBLIC_API_URL=http:/localhost:3333 .
+  02-build-api-image:
+    desc: Build the api image
+    cmds:
+    - docker build -f apps/backend/Dockerfile -t japan-photo-app-api:latest .
+  03-build-all-images:
+    desc: Build all images
+    cmds:
+    - task 01-build-web-image
+    - task 02-build-api-image
+  04-run-docker-compose:
+    desc: Run the docker compose
+    cmds:
+    - docker-compose up -d
+  05-build-and-run-docker-compose:
+    desc: Build and run the docker compose
+    cmds:
+    - task 03-build-all-images
+    - task 04-run-docker-compose
+  06-stop-docker-compose:
+    desc: Stop the docker compose
+    cmds:
+    - docker-compose down --volumes

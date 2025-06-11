@@ -5,7 +5,7 @@ FROM base AS pruner
 WORKDIR /app
 COPY . .
 RUN npm install -g turbo
-RUN turbo prune --scope=web --docker
+RUN turbo prune --scope=frontend --docker
 
 FROM base AS installer
 WORKDIR /app
@@ -41,9 +41,9 @@ USER nextjs
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
+COPY --from=builder --chown=nextjs:nodejs /app/apps/frontend/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/apps/frontend/.next/static ./apps/frontend/.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/apps/frontend/public ./apps/frontend/public
 
 ENV NODE_ENV=production
 ENV HOSTNAME="0.0.0.0"
@@ -51,4 +51,4 @@ ENV PORT=3000
 
 EXPOSE 3000
 
-CMD ["node", "apps/web/server.js"]
+CMD ["node", "apps/frontend/server.js"]

@@ -5,13 +5,13 @@ on:
     branches:
       - main
     paths:
-      - apps/web/**
+      - apps/frontend/**
       - .github/workflows/web-build.yml
   pull_request:
     branches:
       - main
     paths:
-      - apps/web/**
+      - apps/frontend/**
       - .github/workflows/web-build.yml
   workflow_dispatch:
 
@@ -47,7 +47,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./apps/web/Dockerfile
+          file: ./apps/frontend/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
