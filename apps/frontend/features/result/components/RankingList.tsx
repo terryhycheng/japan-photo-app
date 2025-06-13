@@ -4,6 +4,7 @@ import React from "react";
 import RankingCard from "./RankingCard";
 import { useQuery } from "@tanstack/react-query";
 import { getRankingData } from "../data/ranking";
+import Loader from "@/components/Loader";
 
 const RankingList = () => {
   const {
@@ -16,7 +17,7 @@ const RankingList = () => {
   });
 
   if (isError) return <div>Error</div>;
-  if (isLoading || !rankingData) return <div>Loading...</div>;
+  if (isLoading || !rankingData) return <Loader />;
 
   return (
     <section className="bg-[#F8D6C1] py-10">

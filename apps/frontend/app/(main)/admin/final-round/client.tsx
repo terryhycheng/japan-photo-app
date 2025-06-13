@@ -1,5 +1,6 @@
 "use client";
 
+import Loader from "@/components/Loader";
 import AwardList from "@/features/judge/components/AwardList";
 import MainJudgeList from "@/features/judge/components/MainJudgeList";
 import OtherJudgeList from "@/features/judge/components/OtherJudgeList";
@@ -20,7 +21,7 @@ const FinalRoundClientPage = () => {
   });
 
   if (isLoading || !photos || isCategoriesLoading || !categories) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   const selectedPhotos = photos.filter((photo) => photo?.is_selected);

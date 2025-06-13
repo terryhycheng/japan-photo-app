@@ -1,7 +1,7 @@
 "use client";
 
 import CustomButton from "@/components/CustomButton";
-import { ArrowLeftIcon, CircleHelpIcon } from "lucide-react";
+import { ArrowLeftIcon, CircleHelpIcon, Loader } from "lucide-react";
 import React from "react";
 import OtherCard from "./OtherCard";
 import { useQuery } from "@tanstack/react-query";
@@ -18,7 +18,7 @@ const OtherList = () => {
   });
 
   if (error) return <div>Error: {error.message}</div>;
-  if (isLoading || !otherPhotos) return <div>Loading...</div>;
+  if (isLoading || !otherPhotos) return <Loader />;
 
   return (
     <section className="py-10">

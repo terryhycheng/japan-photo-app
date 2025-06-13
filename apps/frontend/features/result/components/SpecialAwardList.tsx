@@ -6,6 +6,7 @@ import React from "react";
 import SpecialAwardCard from "./SpecialAwardCard";
 import { useQuery } from "@tanstack/react-query";
 import { getSpecialAwards } from "../data/special_award";
+import Loader from "@/components/Loader";
 
 const SpecialAwardList = () => {
   const {
@@ -19,7 +20,7 @@ const SpecialAwardList = () => {
 
   if (isError) return <div>Error</div>;
 
-  if (isLoading || !specialAwards) return <div>Loading...</div>;
+  if (isLoading || !specialAwards) return <Loader />;
 
   return (
     <section className="container mx-auto flex flex-col items-center gap-8 py-10">

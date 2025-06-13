@@ -118,8 +118,10 @@ const RankingCard = ({
             </div>
           </div>
         </DialogContent>
-        <p className="font-dale text-center text-2xl">第{index + 1}名</p>
-        <p className="font-kiwimaru text-center text-xl tracking-wide">
+        <p className="font-dale text-center text-xl lg:text-2xl">
+          第{index + 1}名
+        </p>
+        <p className="font-kiwimaru text-center tracking-wide lg:text-xl">
           <span>{photoData.photo.total_score}</span> 分 -{" "}
           {photoData.author.name}作品
         </p>

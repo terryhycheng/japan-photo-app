@@ -11,6 +11,7 @@ import {
 import { getResult } from "../data/result";
 import { useQuery } from "@tanstack/react-query";
 import * as _ from "lodash";
+import Loader from "@/components/Loader";
 
 export const description = "A bar chart with an active bar";
 
@@ -34,7 +35,7 @@ export function ResultChart() {
     queryFn: async () => await getResult(),
   });
   if (isError) return <div>Error</div>;
-  if (isLoading || !data) return <div>Loading...</div>;
+  if (isLoading || !data) return <Loader />;
 
   const chartData = Object.entries(data.result).map(
     ([author, score], index) => ({

@@ -4,6 +4,7 @@ import React from "react";
 import FirstRoundCard from "./FirstRoundCard";
 import { useQuery } from "@tanstack/react-query";
 import { getRankingData } from "../data/ranking";
+import Loader from "@/components/Loader";
 
 const FirstRoundList = () => {
   const {
@@ -16,7 +17,7 @@ const FirstRoundList = () => {
   });
 
   if (isError) return <div>Error</div>;
-  if (isLoading || !rankingData) return <div>Loading...</div>;
+  if (isLoading || !rankingData) return <Loader />;
 
   return (
     <section className="pt-10">

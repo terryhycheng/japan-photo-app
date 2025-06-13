@@ -13,7 +13,6 @@ import { CategoriesService } from 'src/categories/categories.service';
 import { AuthorsService } from 'src/authors/authors.service';
 import { markingScheme } from './utils/markings';
 import * as _ from 'lodash';
-import { OtherPhotoDto } from 'src/photos/dto/photos.dto';
 
 @Injectable()
 export class JudgeService {
@@ -46,15 +45,7 @@ export class JudgeService {
         continue;
       }
 
-      if (photoRanking.length >= 15) break; // limit the number of photos to 15
-
-      const score = Object.entries(photo.judge.scores).reduce(
-        (acc, [_, score]) => {
-          acc += score[0];
-          return acc;
-        },
-        0,
-      );
+      const score = this.calculateScore(photo.judge.scores);
 
       photoRanking.push({
         photoId: photo.id,
@@ -64,7 +55,7 @@ export class JudgeService {
     }
 
     try {
-      photoRanking = _.orderBy(photoRanking, ['score'], ['desc']);
+      photoRanking = _.orderBy(photoRanking, ['score'], ['desc']).slice(0, 15);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -168,13 +159,7 @@ export class JudgeService {
         continue;
       }
 
-      const totalScore = Object.entries(photo.judge.scores).reduce(
-        (acc, [_, score]) => {
-          acc += score[0];
-          return acc;
-        },
-        0,
-      );
+      const totalScore = this.calculateScore(photo.judge.scores);
 
       ranking.push({
         photo: {
@@ -192,7 +177,8 @@ export class JudgeService {
     }
 
     try {
-      return _.orderBy(ranking, ['photo.total_score'], ['desc']);
+      const result = _.orderBy(ranking, ['photo.total_score'], ['desc']);
+      return result;
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -223,5 +209,12 @@ export class JudgeService {
     }
 
     return result;
+  }
+
+  private calculateScore(scores: Record<string, number[]>) {
+    return Object.entries(scores).reduce((acc, [_, score]) => {
+      acc += score[0];
+      return acc;
+    }, 0);
   }
 }
