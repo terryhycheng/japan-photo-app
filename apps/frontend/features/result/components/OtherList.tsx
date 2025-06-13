@@ -1,11 +1,12 @@
 "use client";
 
 import CustomButton from "@/components/CustomButton";
-import { ArrowLeftIcon, CircleHelpIcon, Loader } from "lucide-react";
+import { ArrowLeftIcon, CircleHelpIcon } from "lucide-react";
 import React from "react";
 import OtherCard from "./OtherCard";
 import { useQuery } from "@tanstack/react-query";
 import { getOtherPhotos } from "../data/otherPhoto";
+import Loader from "@/components/Loader";
 
 const OtherList = () => {
   const {

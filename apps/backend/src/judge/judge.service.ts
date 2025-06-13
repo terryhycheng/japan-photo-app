@@ -186,17 +186,15 @@ export class JudgeService {
 
   async getOtherPhotoResult(): Promise<OtherPhotoResultDto> {
     const otherPhotos = await this.photosService.getOtherPhotos();
-    const result: OtherPhotoResultDto = {
-      result: {},
-    };
+    const result: OtherPhotoResultDto['result'] = {};
 
     for (const photo of otherPhotos) {
       if (!photo.judge) {
         continue;
       }
 
-      if (!result.result[photo.judge.category.name]) {
-        result.result[photo.judge.category.name] = {
+      if (!result[photo.judge.category.name]) {
+        result[photo.judge.category.name] = {
           details: {
             name: photo.judge.category.name,
             description: photo.judge.category.description,
@@ -205,10 +203,12 @@ export class JudgeService {
         };
       }
 
-      result.result[photo.judge.category.name].photos.push(photo);
+      result[photo.judge.category.name].photos.push(photo);
     }
 
-    return result;
+    return {
+      result: _.pick(result, Object.keys(result).sort()),
+    };
   }
 
   private calculateScore(scores: Record<string, number[]>) {
